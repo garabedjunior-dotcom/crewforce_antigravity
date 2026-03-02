@@ -1,0 +1,173 @@
+﻿[
+  {
+    "Rate ID": "R001",
+    "Pay Item Code": "HDD_FT",
+    "Rate Amount": 0.85,
+    "Rate Unit": "per FT",
+    "Effective From": "2026-01-01",
+    "Effective To": "2026-12-31",
+    "Context/Notes": "Urban HDD standard"
+  },
+  {
+    "Rate ID": "R002",
+    "Pay Item Code": "TRENCH_FT",
+    "Rate Amount": 0.65,
+    "Rate Unit": "per FT",
+    "Effective From": "2026-01-01",
+    "Effective To": "2026-12-31",
+    "Context/Notes": "Open trench standard"
+  },
+  {
+    "Rate ID": "R003",
+    "Pay Item Code": "HANDHOLE_EA",
+    "Rate Amount": 45,
+    "Rate Unit": "per EA",
+    "Effective From": "2026-01-01",
+    "Effective To": "2026-12-31",
+    "Context/Notes": "Standard handhole"
+  },
+  {
+    "Rate ID": "R004",
+    "Pay Item Code": "VAULT_EA",
+    "Rate Amount": 85,
+    "Rate Unit": "per EA",
+    "Effective From": "2026-01-01",
+    "Effective To": "2026-12-31",
+    "Context/Notes": "Standard vault",
+    "__EMPTY_4": "Pay Item Code",
+    "__EMPTY_5": "Rate Unit",
+    "__EMPTY_6": "Context/Notes"
+  },
+  {
+    "Rate ID": "R005",
+    "Pay Item Code": "POTHOLE_EA",
+    "Rate Amount": 35,
+    "Rate Unit": "per EA",
+    "Effective From": "2026-01-01",
+    "Effective To": "2026-12-31",
+    "Context/Notes": "Standard pothole",
+    "__EMPTY_4": "HDD_FT",
+    "__EMPTY_5": "per FT",
+    "__EMPTY_6": "Urban HDD standard"
+  },
+  {
+    "Rate ID": "R006",
+    "Pay Item Code": "RESTORATION_SQFT",
+    "Rate Amount": 2.5,
+    "Rate Unit": "per SQFT",
+    "Effective From": "2026-01-01",
+    "Effective To": "2026-12-31",
+    "Context/Notes": "Area restoration",
+    "__EMPTY_4": "TRENCH_FT",
+    "__EMPTY_5": "per FT",
+    "__EMPTY_6": "Open trench standard"
+  },
+  {
+    "Rate ID": "R007",
+    "Pay Item Code": "BORE_FT",
+    "Rate Amount": 0.9,
+    "Rate Unit": "per FT",
+    "Effective From": "2026-01-01",
+    "Effective To": "2026-12-31",
+    "Context/Notes": "Difficult soil",
+    "__EMPTY_4": "HANDHOLE_EA",
+    "__EMPTY_5": "per EA",
+    "__EMPTY_6": "Standard handhole"
+  },
+  {
+    "Rate ID": "R008",
+    "Pay Item Code": "CABLE_PULL_FT",
+    "Rate Amount": 0.4,
+    "Rate Unit": "per FT",
+    "Effective From": "2026-01-01",
+    "Effective To": "2026-12-31",
+    "Context/Notes": "Standard cable pull",
+    "__EMPTY_4": "VAULT_EA",
+    "__EMPTY_5": "per EA",
+    "__EMPTY_6": "Standard vault"
+  },
+  {
+    "Rate ID": "R009",
+    "Pay Item Code": "CONDUIT_FT",
+    "Rate Amount": 0.55,
+    "Rate Unit": "per FT",
+    "Effective From": "2026-01-01",
+    "Effective To": "2026-12-31",
+    "Context/Notes": "Standard conduit",
+    "__EMPTY_4": "POTHOLE_EA",
+    "__EMPTY_5": "per EA",
+    "__EMPTY_6": "Standard pothole"
+  },
+  {
+    "Rate ID": "R010",
+    "Pay Item Code": "REWORK_FT",
+    "Rate Amount": 0.3,
+    "Rate Unit": "per FT",
+    "Effective From": "2026-01-01",
+    "Effective To": "2026-12-31",
+    "Context/Notes": "Rework penalty rate",
+    "__EMPTY_4": "RESTORATION_SQFT",
+    "__EMPTY_5": "per SQFT",
+    "__EMPTY_6": "Area restoration"
+  },
+  {
+    "__EMPTY_4": "BORE_FT",
+    "__EMPTY_5": "per FT",
+    "__EMPTY_6": "Difficult soil"
+  },
+  {
+    "__EMPTY_4": "CABLE_PULL_FT",
+    "__EMPTY_5": "per FT",
+    "__EMPTY_6": "Standard cable pull"
+  },
+  {
+    "__EMPTY_4": "CONDUIT_FT",
+    "__EMPTY_5": "per FT",
+    "__EMPTY_6": "Standard conduit"
+  },
+  {
+    "__EMPTY_4": "REWORK_FT",
+    "__EMPTY_5": "per FT",
+    "__EMPTY_6": "Rework penalty rate"
+  },
+  {
+    "__EMPTY_4": "Equipe de Perfura├º├úo Direcional (HDD Crew)",
+    "__EMPTY_5": "Di├íria"
+  },
+  {
+    "__EMPTY_4": "Foreman (Encarregado de Equipe):",
+    "__EMPTY_5": "$200"
+  },
+  {
+    "__EMPTY_4": "HDD Driller (Operador de Perfuratriz):",
+    "__EMPTY_5": "$200"
+  },
+  {
+    "__EMPTY_4": "HDD Locator / Tracker (Localizador):",
+    "__EMPTY_5": "$200"
+  },
+  {
+    "__EMPTY_4": "Mud Mixer / Laborer (Auxiliar de Mistura):",
+    "__EMPTY_5": "$170"
+  },
+  {
+    "__EMPTY_4": "Operator (Operador de Escavadeira/Mini-carregadeira):",
+    "__EMPTY_5": "$200"
+  },
+  {
+    "__EMPTY_4": "Restoration Laborer (Auxiliar de Restaura├º├úo):",
+    "__EMPTY_5": "$160"
+  },
+  {
+    "__EMPTY_4": "Manager",
+    "__EMPTY_5": "$250"
+  },
+  {
+    "__EMPTY_4": "Em caso de┬ámeia di├íria (0.5): ├® sempre exatamente metade do m├¡nimo (50%)?",
+    "__EMPTY_5": "sempre a metade - 50%"
+  },
+  {
+    "__EMPTY_4": "REWORK_FT: voc├¬ quer que seja desconto do pool (penalidade) ou apenas ÔÇ£paga menosÔÇØ (entra positivo com rate menor)?pool┬á(penalidade) ou apenas ÔÇ£paga menosÔÇØ (entra positivo com rate menor)?",
+    "__EMPTY_5": "50/50"
+  }
+]

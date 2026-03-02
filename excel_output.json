@@ -1,0 +1,131 @@
+{
+  "Planilha1": [
+    [
+      "Funcionários, Cargos e Valores"
+    ],
+    [
+      "#",
+      "Nome",
+      "Cargo",
+      "Diária (USD)",
+      "Valor Produção",
+      "Crew",
+      "Crew - Observações"
+    ],
+    [
+      1,
+      "César",
+      "Operador Míssil",
+      "definida por projeto",
+      "$0.15/ft - mas pode variar por projeto, inclusive nem existir",
+      1,
+      "formações podem variar dentro da realização de um projeto de acordo com a necessidade da empresa. Por motivos de falta, doença e outras necessidades esta flexibilização precisa existir"
+    ],
+    [
+      2,
+      "Rodrigues",
+      "Operador Míssil",
+      "definida por projeto",
+      "$0.15/ft - mas pode variar por projeto, inclusive nem existir",
+      1,
+      "formações podem variar dentro da realização de um projeto de acordo com a necessidade da empresa. Por motivos de falta, doença e outras necessidades esta flexibilização precisa existir"
+    ],
+    [
+      3,
+      "Harold",
+      "Operador Míssil",
+      "definida por projeto",
+      "$0.15/ft - mas pode variar por projeto, inclusive nem existir",
+      1,
+      "formações podem variar dentro da realização de um projeto de acordo com a necessidade da empresa. Por motivos de falta, doença e outras necessidades esta flexibilização precisa existir"
+    ],
+    [
+      4,
+      "Aschenel",
+      "Operador Míssil",
+      "definida por projeto",
+      "$0.15/ft - mas pode variar por projeto, inclusive nem existir",
+      2,
+      "formações podem variar dentro da realização de um projeto de acordo com a necessidade da empresa. Por motivos de falta, doença e outras necessidades esta flexibilização precisa existir"
+    ],
+    [
+      5,
+      "Diego",
+      "Imediato",
+      "definida por projeto",
+      "$0.15/ft - mas pode variar por projeto, inclusive nem existir",
+      1,
+      "formações podem variar dentro da realização de um projeto de acordo com a necessidade da empresa. Por motivos de falta, doença e outras necessidades esta flexibilização precisa existir"
+    ],
+    [
+      6,
+      "Luisnel",
+      "Imediato/Drop/Fibra",
+      "definida por projeto",
+      "$0.15/ft - mas pode variar por projeto, inclusive nem existir",
+      3,
+      "formações podem variar dentro da realização de um projeto de acordo com a necessidade da empresa. Por motivos de falta, doença e outras necessidades esta flexibilização precisa existir"
+    ],
+    [
+      7,
+      "Adel",
+      "Imediato",
+      "definida por projeto",
+      "$0.15/ft - mas pode variar por projeto, inclusive nem existir",
+      2,
+      "formações podem variar dentro da realização de um projeto de acordo com a necessidade da empresa. Por motivos de falta, doença e outras necessidades esta flexibilização precisa existir"
+    ],
+    [
+      8,
+      "Nipson",
+      "Helper",
+      "definida por projeto",
+      "$0.15/ft - mas pode variar por projeto, inclusive nem existir",
+      2,
+      "formações podem variar dentro da realização de um projeto de acordo com a necessidade da empresa. Por motivos de falta, doença e outras necessidades esta flexibilização precisa existir"
+    ],
+    [
+      9,
+      "Frankel",
+      "Helper",
+      "definida por projeto",
+      "$0.15/ft - mas pode variar por projeto, inclusive nem existir",
+      1,
+      "formações podem variar dentro da realização de um projeto de acordo com a necessidade da empresa. Por motivos de falta, doença e outras necessidades esta flexibilização precisa existir"
+    ],
+    [
+      10,
+      "Wildy",
+      "Helper",
+      "definida por projeto",
+      "$0.15/ft - mas pode variar por projeto, inclusive nem existir",
+      3,
+      "formações podem variar dentro da realização de um projeto de acordo com a necessidade da empresa. Por motivos de falta, doença e outras necessidades esta flexibilização precisa existir"
+    ],
+    [
+      11,
+      "Joseph",
+      "Helper",
+      "definida por projeto",
+      "$0.15/ft - mas pode variar por projeto, inclusive nem existir",
+      2,
+      "formações podem variar dentro da realização de um projeto de acordo com a necessidade da empresa. Por motivos de falta, doença e outras necessidades esta flexibilização precisa existir"
+    ],
+    [
+      12,
+      "Miguel",
+      "Helper",
+      "definida por projeto",
+      "$0.15/ft - mas pode variar por projeto, inclusive nem existir",
+      3,
+      "formações podem variar dentro da realização de um projeto de acordo com a necessidade da empresa. Por motivos de falta, doença e outras necessidades esta flexibilização precisa existir"
+    ],
+    [
+      13,
+      "Carlos Abib",
+      "Manager",
+      "definida por projeto",
+      "sem produção"
+    ]
+  ]
+}

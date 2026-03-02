@@ -1,0 +1,186 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_DATABASE_URL")
+}
+
+model User {
+  id             String      @id @default(cuid())
+  name           String?
+  email          String?     @unique
+  password       String?
+  emailVerified  DateTime?
+  image          String?
+  role           Role        @default(WORKER)
+  telegramChatId String?     @unique // Vínculo com o Bot
+  jobTitle       String?     // Cargo na obra (ex: Helper, Operador Míssil)
+  
+  // Payroll & Worker Settings
+  employeeType       String   @default("W2") // "W2" or "1099"
+  baseHourlyRate     Float    @default(0.0)
+  dailyRate          Float    @default(0.0)
+  otMultiplier       Float    @default(1.5)
+  minHourlyGuarantee Boolean  @default(true)
+  minDailyGuarantee  Boolean  @default(false)
+  pieceRateEnabled   Boolean  @default(true)
+  isActive           Boolean  @default(true)
+
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  
+  timecards      Timecard[]
+  dailyLogs      DailyLog[]
+  projectRates   ProjectWorkerRate[]
+  crewId         String?
+  crew           Crew?       @relation(fields: [crewId], references: [id])
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  WORKER
+}
+
+model Crew {
+  id          String    @id @default(cuid())
+  name        String
+  description String?
+  members     User[]
+  projectId   String?
+  project     Project?  @relation(fields: [projectId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Project {
+  id          String        @id @default(cuid())
+  name        String
+  description String?       @db.Text
+  location    String?
+  clientName  String?
+  budget      Float?
+  deadline    DateTime?
+  latitude    Float?
+  longitude   Float?
+  status      ProjectStatus @default(ACTIVE)
+  crews       Crew[]
+  dailyLogs   DailyLog[]
+  workerRates ProjectWorkerRate[]
+  payItems    ProjectPayItem[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+enum ProjectStatus {
+  ACTIVE
+  DELAYED
+  COMPLETED
+}
+
+model ProjectWorkerRate {
+  id               String   @id @default(cuid())
+  
+  workerId         String
+  worker           User     @relation(fields: [workerId], references: [id], onDelete: Cascade)
+  projectId        String
+  project          Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  // Custom Rates (Overrides global User rates if set)
+  customHourlyRate Float?
+  customDailyRate  Float?
+  customPieceRate  Float?   // Valor Produção (ex: $0.15/ft ou $0/ft)
+  
+  // Extra allowances specific to this project
+  perDiem          Float?   // Ajuda de custo/dormir fora (ex: $150/dia)
+  accommodation    Float?   // Auxílio moradia
+  
+  @@unique([workerId, projectId]) // Um trabalhador tem apenas 1 regra por projeto
+}
+
+model Timecard {
+  id            String    @id @default(cuid())
+  workerId      String
+  worker        User      @relation(fields: [workerId], references: [id])
+  checkIn       DateTime
+  checkOut      DateTime?
+  totalHours    Float?
+  status        ApprovalStatus @default(PENDING)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model DailyLog {
+  id          String   @id @default(cuid())
+  projectId   String
+  project     Project  @relation(fields: [projectId], references: [id])
+  workerId    String
+  worker      User     @relation(fields: [workerId], references: [id])
+  description String   @db.Text
+  imageUrls   String[] // Links do bucket S3 armazenando as fotos do Telegram
+  dateReported DateTime @default(now())
+  dayFraction Float    @default(1.0) // 1.0 = FULL DAY, 0.5 = HALF DAY
+  
+  productionLogs ProductionLog[]
+
+  createdAt   DateTime @default(now())
+}
+
+// ==========================================
+// PAYROLL & PRODUCTION MODELS
+// ==========================================
+
+model PayItemCatalog {
+  id            String    @id @default(cuid())
+  code          String    @unique // e.g., "HDD_FT", "TRENCH_FT"
+  description   String
+  rateAmount    Float     // e.g., 0.85
+  rateUnit      String    // e.g., "per FT", "per EA"
+  effectiveFrom DateTime  @default(now())
+  effectiveTo   DateTime?
+  notes         String?
+  
+  productionLogs ProductionLog[]
+  projectRates   ProjectPayItem[]
+}
+
+model ProjectPayItem {
+  id            String    @id @default(cuid())
+  
+  projectId     String
+  project       Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  payItemCode   String
+  payItem       PayItemCatalog @relation(fields: [payItemCode], references: [code], onDelete: Cascade)
+  
+  customRate    Float     // Overrides the global rateAmount from PayItemCatalog
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  @@unique([projectId, payItemCode])
+}
+
+model ProductionLog {
+  id            String    @id @default(cuid())
+  quantity      Float     // e.g., 450
+  status        String    @default("PENDING") // PENDING, APPROVED, REJECTED
+  
+  // Relations
+  dailyLogId    String
+  dailyLog      DailyLog  @relation(fields: [dailyLogId], references: [id], onDelete: Cascade)
+  payItemCode   String
+  payItem       PayItemCatalog @relation(fields: [payItemCode], references: [code])
+  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}

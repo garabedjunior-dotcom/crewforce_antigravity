@@ -1,0 +1,62 @@
+﻿[
+  {
+    "Worker ID": "W001",
+    "Name": "John Silva",
+    "Employee Type": "W2",
+    "Base Hourly Rate": 18,
+    "OT Multiplier": 1.5,
+    "Min Hourly Guarantee": "Yes",
+    "Piece Rate Enabled": "Yes",
+    "Active": "Yes"
+  },
+  {
+    "Worker ID": "W002",
+    "Name": "Maria Santos",
+    "Employee Type": "W2",
+    "Base Hourly Rate": 20,
+    "OT Multiplier": 1.5,
+    "Min Hourly Guarantee": "Yes",
+    "Piece Rate Enabled": "Yes",
+    "Active": "Yes"
+  },
+  {
+    "Worker ID": "W003",
+    "Name": "Carlos Mendes",
+    "Employee Type": 1099,
+    "Base Hourly Rate": 22,
+    "OT Multiplier": 1,
+    "Min Hourly Guarantee": "No",
+    "Piece Rate Enabled": "Yes",
+    "Active": "Yes"
+  },
+  {
+    "Worker ID": "W004",
+    "Name": "Pedro Costa",
+    "Employee Type": "W2",
+    "Base Hourly Rate": 17.5,
+    "OT Multiplier": 1.5,
+    "Min Hourly Guarantee": "Yes",
+    "Piece Rate Enabled": "Yes",
+    "Active": "Yes"
+  },
+  {
+    "Worker ID": "W005",
+    "Name": "Ana Lima",
+    "Employee Type": "W2",
+    "Base Hourly Rate": 19,
+    "OT Multiplier": 1.5,
+    "Min Hourly Guarantee": "Yes",
+    "Piece Rate Enabled": "Yes",
+    "Active": "Yes"
+  },
+  {
+    "Worker ID": "W006",
+    "Name": "Jose Oliveira",
+    "Employee Type": "W2",
+    "Base Hourly Rate": 18.5,
+    "OT Multiplier": 1.5,
+    "Min Hourly Guarantee": "Yes",
+    "Piece Rate Enabled": "Yes",
+    "Active": "Yes"
+  }
+]
