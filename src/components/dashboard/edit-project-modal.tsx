@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { updateProject, ProjectUpdateData } from "@/app/actions/project-actions";
+import { updateProject, deleteProject, ProjectUpdateData } from "@/app/actions/project-actions";
 import { toast } from "sonner";
-import { X, Save, FileEdit, ArchiveRestore } from "lucide-react";
+import { X, Save, FileEdit, ArchiveRestore, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 type ProjectType = {
     id: string;
@@ -13,11 +14,15 @@ type ProjectType = {
     clientName: string | null;
     budget: number | null;
     status: "ACTIVE" | "DELAYED" | "COMPLETED";
+    latitude?: number | null;
+    longitude?: number | null;
 };
 
 export function EditProjectModal({ project }: { project: ProjectType }) {
     const [isOpen, setIsOpen] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+    const router = useRouter();
 
     const [formData, setFormData] = useState<ProjectUpdateData>({
         name: project.name,
@@ -26,6 +31,8 @@ export function EditProjectModal({ project }: { project: ProjectType }) {
         clientName: project.clientName || "",
         budget: project.budget || 0,
         status: project.status,
+        latitude: project.latitude || undefined,
+        longitude: project.longitude || undefined,
     });
 
     const handleSave = async () => {
@@ -33,7 +40,9 @@ export function EditProjectModal({ project }: { project: ProjectType }) {
         try {
             const res = await updateProject(project.id, {
                 ...formData,
-                budget: formData.budget ? Number(formData.budget) : null
+                budget: formData.budget ? Number(formData.budget) : null,
+                latitude: formData.latitude !== undefined && formData.latitude !== null ? Number(formData.latitude) : undefined,
+                longitude: formData.longitude !== undefined && formData.longitude !== null ? Number(formData.longitude) : undefined,
             });
             if (res.success) {
                 toast.success("Project updated successfully!");
@@ -46,6 +55,27 @@ export function EditProjectModal({ project }: { project: ProjectType }) {
             toast.error("Internal Error");
         } finally {
             setIsSaving(false);
+        }
+    };
+
+    const handleDelete = async () => {
+        if (!confirm("Are you sure you want to delete this project? This action cannot be undone and will only succeed if the project has no logs.")) return;
+
+        setIsDeleting(true);
+        try {
+            const res = await deleteProject(project.id);
+            if (res.success) {
+                toast.success("Project deleted successfully!");
+                setIsOpen(false);
+                router.push("/projects");
+            } else {
+                toast.error(res.error || "Failed to delete project.");
+            }
+        } catch (e) {
+            console.error(e);
+            toast.error("Internal Error");
+        } finally {
+            setIsDeleting(false);
         }
     };
 
@@ -112,6 +142,29 @@ export function EditProjectModal({ project }: { project: ProjectType }) {
                                 </div>
                             </div>
 
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-1">
+                                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Latitude</label>
+                                    <input
+                                        type="number"
+                                        step="any"
+                                        className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-3 font-medium text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50"
+                                        value={formData.latitude || ""}
+                                        onChange={e => setFormData({ ...formData, latitude: e.target.value ? Number(e.target.value) : undefined })}
+                                    />
+                                </div>
+                                <div className="space-y-1">
+                                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Longitude</label>
+                                    <input
+                                        type="number"
+                                        step="any"
+                                        className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-3 font-medium text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50"
+                                        value={formData.longitude || ""}
+                                        onChange={e => setFormData({ ...formData, longitude: e.target.value ? Number(e.target.value) : undefined })}
+                                    />
+                                </div>
+                            </div>
+
                             <div className="space-y-1">
                                 <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Location / Address</label>
                                 <input
@@ -144,26 +197,37 @@ export function EditProjectModal({ project }: { project: ProjectType }) {
                         </div>
 
                         {/* Footer */}
-                        <div className="p-5 border-t border-slate-100 dark:border-slate-800 flex justify-end gap-3 bg-slate-50/50 dark:bg-slate-800/50">
+                        <div className="p-5 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50">
                             <button
-                                className="px-5 py-2.5 rounded-lg font-bold text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-                                onClick={() => setIsOpen(false)}
-                                disabled={isSaving}
+                                onClick={handleDelete}
+                                disabled={isDeleting || isSaving}
+                                className="text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 px-4 py-2.5 rounded-lg flex items-center gap-2 font-bold text-sm transition-colors"
                             >
-                                Cancel
+                                {isDeleting ? <ArchiveRestore size={16} className="animate-spin" /> : <Trash2 size={16} />}
+                                Delete Project
                             </button>
-                            <button
-                                className="px-5 py-2.5 rounded-lg font-bold text-sm bg-primary text-white hover:bg-primary/90 transition-colors flex items-center gap-2 shadow-lg shadow-primary/20"
-                                onClick={handleSave}
-                                disabled={isSaving}
-                            >
-                                {isSaving ? (
-                                    <ArchiveRestore size={16} strokeWidth={2.5} className="animate-spin" />
-                                ) : (
-                                    <Save size={16} strokeWidth={2.5} />
-                                )}
-                                {isSaving ? "Saving..." : "Save Changes"}
-                            </button>
+
+                            <div className="flex gap-3">
+                                <button
+                                    className="px-5 py-2.5 rounded-lg font-bold text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                                    onClick={() => setIsOpen(false)}
+                                    disabled={isSaving || isDeleting}
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    className="px-5 py-2.5 rounded-lg font-bold text-sm bg-primary text-white hover:bg-primary/90 transition-colors flex items-center gap-2 shadow-lg shadow-primary/20"
+                                    onClick={handleSave}
+                                    disabled={isSaving || isDeleting}
+                                >
+                                    {isSaving ? (
+                                        <ArchiveRestore size={16} strokeWidth={2.5} className="animate-spin" />
+                                    ) : (
+                                        <Save size={16} strokeWidth={2.5} />
+                                    )}
+                                    {isSaving ? "Saving..." : "Save Changes"}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

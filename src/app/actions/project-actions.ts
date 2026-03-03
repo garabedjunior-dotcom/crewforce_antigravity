@@ -60,6 +60,8 @@ const projectUpdateSchema = z.object({
     clientName: z.string().nullable(),
     budget: z.number().min(0).nullable(),
     status: z.enum(["ACTIVE", "DELAYED", "COMPLETED"]),
+    latitude: z.number().min(-90).max(90).nullable().optional(),
+    longitude: z.number().min(-180).max(180).nullable().optional(),
 });
 
 export type ProjectUpdateData = z.infer<typeof projectUpdateSchema>;
@@ -77,10 +79,13 @@ export async function updateProject(id: string, data: unknown) {
                 clientName: validated.clientName || null,
                 budget: validated.budget,
                 status: validated.status,
+                latitude: validated.latitude !== undefined ? validated.latitude : undefined,
+                longitude: validated.longitude !== undefined ? validated.longitude : undefined,
             }
         });
         revalidatePath(`/projects/${id}`);
         revalidatePath("/projects");
+        revalidatePath("/map");
         return { success: true };
     } catch (error) {
         if (error instanceof z.ZodError) {
@@ -88,5 +93,40 @@ export async function updateProject(id: string, data: unknown) {
         }
         console.error("Failed to update project:", error);
         return { success: false, error: "Database update failed." };
+    }
+}
+
+export async function deleteProject(id: string) {
+    await requireAuth(["ADMIN", "MANAGER"]);
+    try {
+        const project = await prisma.project.findUnique({
+            where: { id },
+            include: { dailyLogs: true }
+        });
+
+        if (!project) {
+            return { success: false, error: "Project not found." };
+        }
+
+        if (project.dailyLogs.length > 0) {
+            return { success: false, error: "Cannot delete project with registered daily logs." };
+        }
+
+        // Disconnect any crews assigned to this project so they aren't deleted/blocked
+        await prisma.crew.updateMany({
+            where: { projectId: id },
+            data: { projectId: null }
+        });
+
+        await prisma.project.delete({
+            where: { id }
+        });
+
+        revalidatePath("/projects");
+        revalidatePath("/map");
+        return { success: true };
+    } catch (error) {
+        console.error("Failed to delete project:", error);
+        return { success: false, error: "Database delete failed." };
     }
 }
