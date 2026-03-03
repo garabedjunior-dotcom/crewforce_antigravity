@@ -5,6 +5,7 @@ import { FadeIn } from "@/components/ui/fade-in";
 import { WorkerDirectoryTable } from "@/components/dashboard/worker-directory-table";
 import { Users, UserPlus, HardHat, Send, Pickaxe, BadgeInfo } from "lucide-react";
 import { DeleteCrewButton } from "@/components/dashboard/delete-crew-button";
+import { NewCrewDialog } from "@/components/dashboard/new-crew-dialog";
 
 export const dynamic = 'force-dynamic';
 
@@ -20,6 +21,12 @@ export default async function CrewsPage() {
     const workers = await prisma.user.findMany({
         where: { role: { in: ['WORKER', 'MANAGER', 'ADMIN'] }, isActive: true },
         include: { crew: true },
+        orderBy: { name: 'asc' }
+    });
+
+    // Fetch projects for the create crew dialog
+    const projects = await prisma.project.findMany({
+        select: { id: true, name: true },
         orderBy: { name: 'asc' }
     });
 
@@ -39,10 +46,7 @@ export default async function CrewsPage() {
                                 <UserPlus size={18} strokeWidth={2.5} />
                                 Add Worker
                             </Link>
-                            <button className="bg-primary hover:bg-primary/90 text-white px-6 py-2.5 rounded-xl font-bold shadow-lg shadow-primary/20 hover:shadow-primary/30 hover:-translate-y-0.5 transition-all flex items-center gap-2">
-                                <Users size={18} strokeWidth={2.5} />
-                                New Crew
-                            </button>
+                            <NewCrewDialog projects={projects} />
                         </div>
                     </FadeIn>
 
