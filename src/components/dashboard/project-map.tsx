@@ -39,10 +39,10 @@ export function ProjectMap({ projects }: ProjectMapProps) {
 
         L.control.zoom({ position: "bottomright" }).addTo(map);
 
-        // Standard clear map layer
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-            maxZoom: 19,
+        // Google Maps Hybrid (Satellite View with Streets and Labels)
+        L.tileLayer("https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}", {
+            attribution: '&copy; Google Maps',
+            maxZoom: 22,
         }).addTo(map);
 
         // Custom icon
