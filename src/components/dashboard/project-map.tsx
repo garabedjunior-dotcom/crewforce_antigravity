@@ -123,6 +123,13 @@ export function ProjectMap({ projects }: ProjectMapProps) {
 
         mapInstanceRef.current = map;
 
+        // Leaflet edge-case fix: Force recalculation of map container bounds once DOM is fully painted
+        setTimeout(() => {
+            if (mapInstanceRef.current) {
+                mapInstanceRef.current.invalidateSize();
+            }
+        }, 300);
+
         return () => {
             map.remove();
             mapInstanceRef.current = null;
@@ -130,8 +137,8 @@ export function ProjectMap({ projects }: ProjectMapProps) {
     }, [projects]);
 
     return (
-        <div className="relative w-full h-full">
-            <div ref={mapRef} className="w-full h-full rounded-xl" />
+        <div className="relative w-full h-full min-h-[400px] flex-1 isolate z-0">
+            <div ref={mapRef} className="absolute inset-0 rounded-xl z-0" style={{ minHeight: "100%" }} />
             <style jsx global>{`
                 .custom-popup .leaflet-popup-content-wrapper {
                     border-radius: 12px;
@@ -149,6 +156,12 @@ export function ProjectMap({ projects }: ProjectMapProps) {
                 }
                 .leaflet-control-zoom a:hover {
                     background: rgba(15, 23, 42, 1) !important;
+                }
+                /* Força o map container a renderizar mesmo se o flex falhar */
+                .leaflet-container {
+                    width: 100% !important;
+                    height: 100% !important;
+                    z-index: 1 !important;
                 }
             `}</style>
         </div>
