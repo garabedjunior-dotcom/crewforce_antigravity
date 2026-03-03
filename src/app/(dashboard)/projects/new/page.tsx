@@ -136,6 +136,44 @@ export default function NewProjectPage() {
                                 </div>
                             </div>
 
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                {/* Latitude */}
+                                <div className="space-y-1.5">
+                                    <label htmlFor="latitude" className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                        Latitude
+                                    </label>
+                                    <div className="relative">
+                                        <span className="material-symbols-outlined text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 text-[18px]">explore</span>
+                                        <input
+                                            id="latitude"
+                                            name="latitude"
+                                            type="number"
+                                            step="any"
+                                            placeholder="e.g., 25.7617"
+                                            className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg pl-10 pr-4 py-3 text-sm font-medium focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Longitude */}
+                                <div className="space-y-1.5">
+                                    <label htmlFor="longitude" className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                        Longitude
+                                    </label>
+                                    <div className="relative">
+                                        <span className="material-symbols-outlined text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 text-[18px]">explore</span>
+                                        <input
+                                            id="longitude"
+                                            name="longitude"
+                                            type="number"
+                                            step="any"
+                                            placeholder="e.g., -80.1918"
+                                            className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg pl-10 pr-4 py-3 text-sm font-medium focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
                             {/* Actions */}
                             <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
                                 <Link
