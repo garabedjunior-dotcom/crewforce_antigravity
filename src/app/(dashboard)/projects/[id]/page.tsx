@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { FadeIn } from "@/components/ui/fade-in";
 import { EditProjectModal } from "@/components/dashboard/edit-project-modal";
+import { MapWrapper } from "@/components/dashboard/map-wrapper";
 import { Metadata } from "next";
 
 export const dynamic = 'force-dynamic';
@@ -161,15 +162,35 @@ export default async function ProjectDetailsPage(props: { params: Promise<{ id: 
 
                         <FadeIn delay={0.3} direction="left" className="col-span-12 lg:col-span-4 flex flex-col gap-6">
                             <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col h-[400px]">
-                                <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
+                                <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center relative z-10 bg-white dark:bg-slate-900">
                                     <h3 className="font-bold">Project Schematic</h3>
-                                    <button className="material-symbols-outlined text-slate-400 hover:text-slate-600 transition-colors">fullscreen</button>
+                                    {project.latitude && project.longitude && (
+                                        <Link href="/map" className="material-symbols-outlined text-slate-400 hover:text-slate-600 transition-colors">fullscreen</Link>
+                                    )}
                                 </div>
-                                <div className="flex-1 bg-slate-50 relative overflow-hidden group">
-                                    <img src="https://images.unsplash.com/photo-1541888081604-5f56ac01bd15?q=80&w=2670&auto=format&fit=crop" className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700" alt="Map schematic" />
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                        <div className="w-4 h-4 bg-primary rounded-full ring-4 ring-primary/20 animate-pulse"></div>
-                                    </div>
+                                <div className="flex-1 bg-slate-50 dark:bg-slate-900 relative group z-0">
+                                    {(project.latitude && project.longitude) ? (
+                                        <div className="w-full h-full relative z-0">
+                                            <MapWrapper projects={[{
+                                                id: project.id,
+                                                name: project.name,
+                                                location: project.location,
+                                                status: project.status,
+                                                latitude: project.latitude,
+                                                longitude: project.longitude,
+                                                crewCount: project.crews.length,
+                                                logCount: project.dailyLogs.length
+                                            }]} />
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <img src="https://images.unsplash.com/photo-1541888081604-5f56ac01bd15?q=80&w=2670&auto=format&fit=crop" className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700" alt="Map schematic" />
+                                            <div className="absolute inset-0 flex items-center justify-center flex-col bg-black/50 text-white">
+                                                <div className="w-4 h-4 bg-primary rounded-full ring-4 ring-primary/20 animate-pulse mb-3"></div>
+                                                <span className="text-sm font-bold text-center px-6 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">No coordinates set.<br />Edit project to add them.</span>
+                                            </div>
+                                        </>
+                                    )}
                                 </div>
                             </div>
 
