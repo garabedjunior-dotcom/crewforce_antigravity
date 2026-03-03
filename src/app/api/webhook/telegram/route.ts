@@ -109,19 +109,29 @@ async function processWebhookUpdate(update: { message: Record<string, unknown> }
         // 3. Process Message as a Daily Log
         let description = text;
         let dayFraction = 1.0;
+        let productionRecords: Array<{ payItemCode: string, quantity: number }> = [];
 
         const isMediaGroup = !!(msg.media_group_id);
 
         if (process.env.GEMINI_API_KEY && text.length > 5) {
             try {
+                // Fetch valid pay item codes from catalog to instruct Gemini
+                const catalogItems = await prisma.payItemCatalog.findMany();
+                const catalogContext = catalogItems.map(c => `"${c.code}": ${c.description}`).join(', ');
+
                 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
                 const response = await ai.models.generateContent({
                     model: 'gemini-2.5-flash',
                     contents: `Extract the details from this field worker's daily log: "${text}".
+You also have the following valid Pay Item Codes available in the system: ${catalogContext}.
+If the worker mentions producing/completing quantities of specific tasks, extract them.
 Return ONLY a valid JSON object with:
 {
   "cleanedDescription": "A professional summary of the work done, correcting typos",
-  "dayFraction": a float (1.0 for a full 8+ hour day, 0.5 for half day, or (hours/8) if specific hours mentioned. Default to 1.0)
+  "dayFraction": a float (1.0 for a full 8+ hour day, 0.5 for half day, or (hours/8) if specific hours mentioned. Default to 1.0),
+  "production": [
+      { "payItemCode": "EXACT_CODE_FROM_LIST", "quantity": number_extracted }
+  ]
 }`,
                 });
                 const aiText = response.text || "{}";
@@ -136,6 +146,9 @@ Return ONLY a valid JSON object with:
                     if (!isNaN(parsedNumber) && parsedNumber >= 0) {
                         dayFraction = parsedNumber;
                     }
+                }
+                if (Array.isArray(parsed.production)) {
+                    productionRecords = parsed.production;
                 }
             } catch (error) {
                 console.error("AI Parsing failed, using raw text", error);
@@ -170,7 +183,7 @@ Return ONLY a valid JSON object with:
             }
         }
 
-        // Save Daily Log
+        // Save Daily Log and Production Logs as nested write
         await prisma.dailyLog.create({
             data: {
                 projectId,
@@ -178,6 +191,15 @@ Return ONLY a valid JSON object with:
                 description,
                 dayFraction,
                 imageUrls,
+                ...(productionRecords.length > 0 && {
+                    productionLogs: {
+                        create: productionRecords.map(prod => ({
+                            payItemCode: prod.payItemCode,
+                            quantity: Number(prod.quantity),
+                            status: "PENDING"
+                        }))
+                    }
+                })
             }
         });
 
