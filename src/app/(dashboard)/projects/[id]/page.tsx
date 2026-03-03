@@ -97,29 +97,6 @@ export default async function ProjectDetailsPage(props: { params: Promise<{ id: 
                                 ))}
                             </div>
 
-                            <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
-                                <h2 className="text-xl font-bold mb-6">Task Progress Breakdown (Demo)</h2>
-                                <div className="space-y-6">
-                                    {[
-                                        { label: "Trenching", progress: 85, detail: "10,200 ft of 12,000 ft" },
-                                        { label: "Directional Boring", progress: 63, detail: "4,100 ft of 6,500 ft" },
-                                        { label: "Fiber Splicing", progress: 20, detail: "24 nodes of 120 nodes" }
-                                    ].map((task, i) => (
-                                        <div key={i} className="space-y-2">
-                                            <div className="flex justify-between items-end">
-                                                <div>
-                                                    <p className="font-bold">{task.label}</p>
-                                                    <p className="text-xs text-slate-500">{task.detail}</p>
-                                                </div>
-                                                <p className="text-primary font-black">{task.progress}%</p>
-                                            </div>
-                                            <div className="w-full bg-slate-100 dark:bg-slate-800 h-3 rounded-full overflow-hidden">
-                                                <div className="bg-primary h-full rounded-full transition-all duration-1000" style={{ width: `${task.progress}%` }}></div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
 
                             <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
                                 <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
