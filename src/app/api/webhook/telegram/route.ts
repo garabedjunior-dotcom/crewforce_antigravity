@@ -147,8 +147,10 @@ Return ONLY a valid JSON object with:
                         dayFraction = parsedNumber;
                     }
                 }
+                const validCodes = new Set(catalogItems.map(c => c.code));
+
                 if (Array.isArray(parsed.production)) {
-                    productionRecords = parsed.production;
+                    productionRecords = parsed.production.filter((p: any) => p && validCodes.has(String(p.payItemCode)));
                 }
             } catch (error) {
                 console.error("AI Parsing failed, using raw text", error);
