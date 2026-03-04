@@ -10,7 +10,7 @@ export function Header({ title }: { title?: string }) {
     const pathname = usePathname();
 
     const getAction = () => {
-        if (pathname === "/" || pathname.startsWith("/projects")) {
+        if (pathname === "/") {
             return { label: "New Project", icon: Plus, href: "/projects/new" };
         }
         if (pathname.startsWith("/map")) {
