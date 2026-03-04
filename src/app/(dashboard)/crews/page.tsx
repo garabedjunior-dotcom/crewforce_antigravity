@@ -133,7 +133,7 @@ export default async function CrewsPage() {
                             <div className="p-6 border-b border-slate-100/50 dark:border-white/5 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50">
                                 <h3 className="font-black text-xl flex items-center gap-2 text-slate-900 dark:text-white"><BadgeInfo className="text-primary" size={24} strokeWidth={2.5} /> Personnel Directory</h3>
                             </div>
-                            <div className="flex-1 overflow-y-auto overflow-x-auto p-0 no-scrollbar relative w-[990px] xl:w-full">
+                            <div className="flex-1 overflow-y-auto overflow-x-auto p-0 no-scrollbar relative w-full">
                                 <WorkerDirectoryTable
                                     workers={workers.map(w => ({
                                         id: w.id,

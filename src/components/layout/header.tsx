@@ -13,9 +13,6 @@ export function Header({ title }: { title?: string }) {
         if (pathname === "/" || pathname.startsWith("/projects")) {
             return { label: "New Project", icon: Plus, href: "/projects/new" };
         }
-        if (pathname.startsWith("/crews")) {
-            return { label: "Add Worker", icon: UserPlus, href: "/crews" };
-        }
         if (pathname.startsWith("/map")) {
             return { label: "Add Location", icon: MapPin, href: "/projects/new" };
         }

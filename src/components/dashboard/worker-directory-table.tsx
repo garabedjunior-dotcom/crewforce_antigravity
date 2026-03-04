@@ -37,8 +37,8 @@ export function WorkerDirectoryTable({ workers, crews }: WorkerDirectoryTablePro
 
     return (
         <>
-            <div className="w-full">
-                <table className="w-[800px] xl:w-full text-left border-collapse whitespace-nowrap">
+            <div className="w-full overflow-x-auto">
+                <table className="w-full min-w-[800px] text-left border-collapse whitespace-nowrap">
                     <thead className="bg-slate-50/80 dark:bg-slate-800/80 sticky top-0 backdrop-blur-md z-10 border-b border-slate-200/50 dark:border-slate-700/50">
                         <tr className="text-[10px] uppercase font-black text-slate-500 tracking-wider">
                             <th className="px-5 py-4">Name</th>
