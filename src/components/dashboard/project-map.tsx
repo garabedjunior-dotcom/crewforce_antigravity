@@ -19,6 +19,61 @@ interface ProjectMapProps {
     projects: ProjectPin[];
 }
 
+const STATUS_COLORS: Record<string, { fill: string; ring: string; label: string }> = {
+    ACTIVE: { fill: "#10b981", ring: "rgba(16,185,129,0.25)", label: "Active" },
+    DELAYED: { fill: "#f59e0b", ring: "rgba(245,158,11,0.25)", label: "Delayed" },
+    COMPLETED: { fill: "#3b82f6", ring: "rgba(59,130,246,0.25)", label: "Completed" },
+};
+
+function createMarkerIcon(status: string) {
+    const color = STATUS_COLORS[status] || { fill: "#94a3b8", ring: "rgba(148,163,184,0.25)" };
+    const isActive = status === "ACTIVE";
+
+    return L.divIcon({
+        className: "premium-marker",
+        html: `
+            <div class="marker-container">
+                ${isActive ? `<div class="marker-pulse" style="background:${color.ring};"></div>` : ""}
+                <div class="marker-dot" style="background:${color.fill}; box-shadow: 0 0 0 3px rgba(255,255,255,0.9), 0 0 12px ${color.fill}80;"></div>
+            </div>
+        `,
+        iconSize: [20, 20],
+        iconAnchor: [10, 10],
+        popupAnchor: [0, -14],
+    });
+}
+
+function createPopupHTML(project: ProjectPin) {
+    const status = STATUS_COLORS[project.status] || { fill: "#94a3b8", label: project.status };
+    return `
+        <div class="popup-inner">
+            <div class="popup-header">
+                <div class="popup-avatar">${project.name.substring(0, 2)}</div>
+                <div class="popup-title-group">
+                    <strong class="popup-name">${project.name}</strong>
+                    <span class="popup-location">${project.location || "No location set"}</span>
+                </div>
+            </div>
+            <div class="popup-badge" style="background:${status.fill}15; color:${status.fill}; border: 1px solid ${status.fill}30;">
+                <span class="popup-badge-dot" style="background:${status.fill};"></span>
+                ${status.label}
+            </div>
+            <div class="popup-stats">
+                <div class="popup-stat">
+                    <span class="popup-stat-value">${project.crewCount}</span>
+                    <span class="popup-stat-label">Crew${project.crewCount !== 1 ? "s" : ""}</span>
+                </div>
+                <div class="popup-stat-divider"></div>
+                <div class="popup-stat">
+                    <span class="popup-stat-value">${project.logCount}</span>
+                    <span class="popup-stat-label">Log${project.logCount !== 1 ? "s" : ""}</span>
+                </div>
+            </div>
+            <a href="/projects/${project.id}" class="popup-cta">View Project</a>
+        </div>
+    `;
+}
+
 export function ProjectMap({ projects }: ProjectMapProps) {
     const mapRef = useRef<HTMLDivElement>(null);
     const mapInstanceRef = useRef<L.Map | null>(null);
@@ -26,7 +81,6 @@ export function ProjectMap({ projects }: ProjectMapProps) {
     useEffect(() => {
         if (!mapRef.current || mapInstanceRef.current) return;
 
-        // Default center: Miami
         const defaultCenter: [number, number] = [25.7617, -80.1918];
         const hasProjects = projects.length > 0;
         const center: [number, number] = hasProjects
@@ -35,99 +89,43 @@ export function ProjectMap({ projects }: ProjectMapProps) {
 
         const map = L.map(mapRef.current, {
             zoomControl: false,
+            attributionControl: false,
         }).setView(center, 12);
 
         L.control.zoom({ position: "bottomright" }).addTo(map);
 
-        // Google Maps Hybrid (Satellite View with Streets and Labels)
-        L.tileLayer("https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}", {
-            attribution: '&copy; Google Maps',
-            maxZoom: 22,
+        // Minimal attribution — small, non-intrusive
+        L.control.attribution({ position: "bottomleft", prefix: false })
+            .addAttribution('<a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a> | &copy; <a href="https://carto.com" target="_blank" rel="noopener">CARTO</a>')
+            .addTo(map);
+
+        // CartoDB Dark Matter — premium dark tile layer
+        L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+            maxZoom: 20,
+            subdomains: "abcd",
         }).addTo(map);
 
-        // Custom icon
-        const pinIcon = L.divIcon({
-            className: "custom-pin",
-            html: `<div style="
-                width: 32px; height: 32px;
-                background: linear-gradient(135deg, #f97316, #ea580c);
-                border-radius: 50% 50% 50% 0;
-                transform: rotate(-45deg);
-                border: 3px solid white;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-                display: flex; align-items: center; justify-content: center;
-            ">
-                <span style="transform: rotate(45deg); color: white; font-size: 14px; font-weight: bold;">⚡</span>
-            </div>`,
-            iconSize: [32, 32],
-            iconAnchor: [16, 32],
-            popupAnchor: [0, -36],
-        });
-
-        const statusColors: Record<string, string> = {
-            ACTIVE: "#10b981",
-            DELAYED: "#f59e0b",
-            COMPLETED: "#3b82f6",
-        };
-
-        // Add markers for each project
+        // Add markers
         projects.forEach((project) => {
-            const marker = L.marker([project.latitude, project.longitude], { icon: pinIcon }).addTo(map);
-
-            const statusColor = statusColors[project.status] || "#94a3b8";
-            marker.bindPopup(`
-                <div style="font-family: 'Inter', sans-serif; min-width: 200px;">
-                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                        <div style="
-                            width: 36px; height: 36px;
-                            background: rgba(249, 115, 22, 0.1);
-                            color: #f97316;
-                            border-radius: 8px;
-                            display: flex; align-items: center; justify-content: center;
-                            font-weight: 900; font-size: 14px; text-transform: uppercase;
-                        ">${project.name.substring(0, 2)}</div>
-                        <div>
-                            <strong style="font-size: 14px; color: #0f172a;">${project.name}</strong>
-                            <div style="font-size: 10px; color: #64748b;">${project.location || "No location"}</div>
-                        </div>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
-                        <span style="
-                            background: ${statusColor}20;
-                            color: ${statusColor};
-                            font-size: 10px; font-weight: 700;
-                            padding: 2px 8px; border-radius: 99px;
-                            text-transform: uppercase; letter-spacing: 0.5px;
-                        ">${project.status}</span>
-                    </div>
-                    <div style="display: flex; gap: 12px; font-size: 11px; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 8px;">
-                        <span>👷 ${project.crewCount} Crew${project.crewCount !== 1 ? 's' : ''}</span>
-                        <span>📋 ${project.logCount} Log${project.logCount !== 1 ? 's' : ''}</span>
-                    </div>
-                    <a href="/projects/${project.id}" style="
-                        display: block; text-align: center;
-                        margin-top: 10px; padding: 6px 12px;
-                        background: #f97316; color: white;
-                        border-radius: 6px; font-size: 12px; font-weight: 700;
-                        text-decoration: none;
-                    ">View Details →</a>
-                </div>
-            `, { className: "custom-popup" });
+            const icon = createMarkerIcon(project.status);
+            const marker = L.marker([project.latitude, project.longitude], { icon }).addTo(map);
+            marker.bindPopup(createPopupHTML(project), {
+                className: "premium-popup",
+                maxWidth: 260,
+                minWidth: 220,
+            });
         });
 
         // Fit bounds if multiple projects
         if (projects.length > 1) {
             const bounds = L.latLngBounds(projects.map((p) => [p.latitude, p.longitude]));
-            map.fitBounds(bounds, { padding: [50, 50] });
+            map.fitBounds(bounds, { padding: [60, 60] });
         }
 
         mapInstanceRef.current = map;
 
-        // Leaflet edge-case fix: Force recalculation of map container bounds once DOM is fully painted
         setTimeout(() => {
-            if (mapInstanceRef.current) {
-                mapInstanceRef.current.invalidateSize();
-            }
+            mapInstanceRef.current?.invalidateSize();
         }, 300);
 
         return () => {
@@ -139,29 +137,233 @@ export function ProjectMap({ projects }: ProjectMapProps) {
     return (
         <div className="relative w-full h-full min-h-[400px] flex-1 isolate z-0">
             <div ref={mapRef} className="absolute inset-0 rounded-xl z-0" style={{ minHeight: "100%" }} />
+
+            {/* Subtle vignette overlay for depth */}
+            <div className="absolute inset-0 rounded-xl pointer-events-none z-[2]"
+                style={{ boxShadow: "inset 0 0 60px rgba(0,0,0,0.15)" }} />
+
             <style jsx global>{`
-                .custom-popup .leaflet-popup-content-wrapper {
-                    border-radius: 12px;
-                    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
-                    padding: 4px;
-                }
-                .custom-popup .leaflet-popup-tip {
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-                }
-                .leaflet-control-zoom a {
-                    background: rgba(15, 23, 42, 0.85) !important;
-                    color: white !important;
-                    border: none !important;
-                    backdrop-filter: blur(8px);
-                }
-                .leaflet-control-zoom a:hover {
-                    background: rgba(15, 23, 42, 1) !important;
-                }
-                /* Força o map container a renderizar mesmo se o flex falhar */
+                /* ─── Container ─── */
                 .leaflet-container {
                     width: 100% !important;
                     height: 100% !important;
                     z-index: 1 !important;
+                    background: #1a1a2e !important;
+                }
+
+                /* ─── Zoom Controls ─── */
+                .leaflet-control-zoom {
+                    border: none !important;
+                    border-radius: 10px !important;
+                    overflow: hidden;
+                    box-shadow: 0 4px 20px rgba(0,0,0,0.3) !important;
+                }
+                .leaflet-control-zoom a {
+                    background: rgba(15, 23, 42, 0.9) !important;
+                    color: rgba(255,255,255,0.7) !important;
+                    border: none !important;
+                    border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+                    backdrop-filter: blur(12px);
+                    width: 36px !important;
+                    height: 36px !important;
+                    line-height: 36px !important;
+                    font-size: 16px !important;
+                    transition: all 0.15s ease;
+                }
+                .leaflet-control-zoom a:hover {
+                    background: rgba(15, 23, 42, 1) !important;
+                    color: white !important;
+                }
+                .leaflet-control-zoom a:last-child {
+                    border-bottom: none !important;
+                }
+
+                /* ─── Attribution ─── */
+                .leaflet-control-attribution {
+                    background: rgba(15, 23, 42, 0.6) !important;
+                    color: rgba(255,255,255,0.35) !important;
+                    font-size: 9px !important;
+                    padding: 2px 8px !important;
+                    border-radius: 6px !important;
+                    backdrop-filter: blur(8px);
+                    margin: 8px !important;
+                }
+                .leaflet-control-attribution a {
+                    color: rgba(255,255,255,0.45) !important;
+                    text-decoration: none !important;
+                }
+
+                /* ─── Marker ─── */
+                .premium-marker {
+                    background: none !important;
+                    border: none !important;
+                }
+                .marker-container {
+                    position: relative;
+                    width: 20px;
+                    height: 20px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+                .marker-dot {
+                    width: 12px;
+                    height: 12px;
+                    border-radius: 50%;
+                    position: relative;
+                    z-index: 2;
+                    transition: transform 0.2s ease;
+                }
+                .premium-marker:hover .marker-dot {
+                    transform: scale(1.3);
+                }
+                .marker-pulse {
+                    position: absolute;
+                    inset: -6px;
+                    border-radius: 50%;
+                    z-index: 1;
+                    animation: pulse-ring 2s ease-out infinite;
+                }
+                @keyframes pulse-ring {
+                    0% { transform: scale(0.8); opacity: 1; }
+                    100% { transform: scale(2.2); opacity: 0; }
+                }
+
+                /* ─── Popup ─── */
+                .premium-popup .leaflet-popup-content-wrapper {
+                    background: rgba(15, 23, 42, 0.95) !important;
+                    backdrop-filter: blur(16px);
+                    border-radius: 14px !important;
+                    box-shadow: 0 12px 40px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.06) !important;
+                    color: white;
+                    padding: 0 !important;
+                    overflow: hidden;
+                }
+                .premium-popup .leaflet-popup-content {
+                    margin: 0 !important;
+                    line-height: 1.4;
+                }
+                .premium-popup .leaflet-popup-tip {
+                    background: rgba(15, 23, 42, 0.95) !important;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                }
+                .premium-popup .leaflet-popup-close-button {
+                    color: rgba(255,255,255,0.4) !important;
+                    font-size: 18px !important;
+                    top: 8px !important;
+                    right: 10px !important;
+                    transition: color 0.15s;
+                }
+                .premium-popup .leaflet-popup-close-button:hover {
+                    color: white !important;
+                }
+
+                /* ─── Popup Inner Content ─── */
+                .popup-inner {
+                    font-family: 'Inter', system-ui, sans-serif;
+                    padding: 16px;
+                }
+                .popup-header {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    margin-bottom: 12px;
+                }
+                .popup-avatar {
+                    width: 36px;
+                    height: 36px;
+                    background: rgba(255, 102, 0, 0.15);
+                    color: #ff6600;
+                    border-radius: 10px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: 800;
+                    font-size: 13px;
+                    text-transform: uppercase;
+                    flex-shrink: 0;
+                }
+                .popup-title-group {
+                    display: flex;
+                    flex-direction: column;
+                    min-width: 0;
+                }
+                .popup-name {
+                    font-size: 14px;
+                    font-weight: 600;
+                    color: white;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+                .popup-location {
+                    font-size: 11px;
+                    color: rgba(255,255,255,0.45);
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+                .popup-badge {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 5px;
+                    font-size: 10px;
+                    font-weight: 700;
+                    padding: 3px 10px;
+                    border-radius: 99px;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                    margin-bottom: 12px;
+                }
+                .popup-badge-dot {
+                    width: 6px;
+                    height: 6px;
+                    border-radius: 50%;
+                }
+                .popup-stats {
+                    display: flex;
+                    align-items: center;
+                    gap: 16px;
+                    padding: 10px 0;
+                    border-top: 1px solid rgba(255,255,255,0.08);
+                    border-bottom: 1px solid rgba(255,255,255,0.08);
+                    margin-bottom: 12px;
+                }
+                .popup-stat {
+                    display: flex;
+                    align-items: baseline;
+                    gap: 4px;
+                }
+                .popup-stat-value {
+                    font-size: 16px;
+                    font-weight: 700;
+                    color: white;
+                }
+                .popup-stat-label {
+                    font-size: 11px;
+                    color: rgba(255,255,255,0.4);
+                    font-weight: 500;
+                }
+                .popup-stat-divider {
+                    width: 1px;
+                    height: 16px;
+                    background: rgba(255,255,255,0.1);
+                }
+                .popup-cta {
+                    display: block;
+                    text-align: center;
+                    padding: 8px 16px;
+                    background: #ff6600;
+                    color: white !important;
+                    border-radius: 8px;
+                    font-size: 12px;
+                    font-weight: 600;
+                    text-decoration: none !important;
+                    transition: background 0.15s ease;
+                    letter-spacing: 0.3px;
+                }
+                .popup-cta:hover {
+                    background: #e55b00;
                 }
             `}</style>
         </div>
