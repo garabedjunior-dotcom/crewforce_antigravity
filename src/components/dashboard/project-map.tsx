@@ -147,14 +147,11 @@ export function ProjectMap({ projects }: ProjectMapProps) {
 
     const isDark = (theme === 'system' ? systemTheme : theme) === 'dark';
 
-    // We use a stable key for the outer container so we don't destroy the Leaflet instance entirely,
-    // but we dynamically update the class to trigger the CSS filter immediately.
+    // By applying the class to the outer wrapper (which is purely React-managed), 
+    // we avoid conflicting with Leaflet's own manipulation of the inner div's classList.
     return (
-        <div key={isDark ? "dark" : "light"} className="relative w-full h-full min-h-[400px] flex-1 isolate z-0">
-            {/* The outer div key prop forces a fresh render cycle for CSS if needed, 
-                though simply changing the class below usually suffices. 
-                Using both ensures Leaflet's internal engine catches the DOM state change. */}
-            <div ref={mapRef} className={`absolute inset-0 rounded-xl z-0 ${isDark ? 'map-dark-mode' : ''}`} style={{ minHeight: "100%" }} />
+        <div className={`relative w-full h-full min-h-[400px] flex-1 isolate z-0 ${isDark ? 'map-dark-mode' : ''}`}>
+            <div ref={mapRef} className="absolute inset-0 rounded-xl z-0" style={{ minHeight: "100%" }} />
 
             {/* Subtle vignette for depth integration */}
             <div className="absolute inset-0 rounded-xl pointer-events-none z-[2]"
