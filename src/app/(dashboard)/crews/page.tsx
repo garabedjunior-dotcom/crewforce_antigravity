@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 import Link from "next/link";
 import { FadeIn } from "@/components/ui/fade-in";
 import { WorkerDirectoryTable } from "@/components/dashboard/worker-directory-table";
-import { Users, UserPlus, HardHat, Send, Pickaxe, BadgeInfo } from "lucide-react";
+import { Users, UserPlus, HardHat, Send, Pickaxe } from "lucide-react";
 import { DeleteCrewButton } from "@/components/dashboard/delete-crew-button";
 import { NewCrewDialog } from "@/components/dashboard/new-crew-dialog";
 
@@ -71,29 +71,31 @@ export default async function CrewsPage() {
                         })}
                     </FadeIn>
 
-                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
-                        {/* Crews List */}
-                        <FadeIn delay={0.2} className="min-w-0 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col h-[600px] relative">
-                            <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50">
-                                <h3 className="font-semibold text-lg flex items-center gap-2 text-slate-900 dark:text-white"><Users className="text-primary" size={24} strokeWidth={2.5} /> Field Crews</h3>
+                    <div className="space-y-8">
+                        {/* Field Crews */}
+                        <FadeIn delay={0.2} className="space-y-4">
+                            <div className="flex justify-between items-center">
+                                <h3 className="font-semibold text-lg flex items-center gap-2 text-slate-900 dark:text-white">
+                                    <Users className="text-primary" size={24} strokeWidth={2.5} /> Field Crews
+                                </h3>
                             </div>
-                            <div className="flex-1 overflow-y-auto p-6 space-y-4 no-scrollbar">
-                                {crews.length === 0 ? (
-                                    <div className="text-center py-16 flex flex-col items-center">
-                                        <Users className="text-slate-300 dark:text-slate-600 mb-4" size={48} strokeWidth={1} />
-                                        <p className="text-slate-500 font-medium">No crews created yet.</p>
-                                    </div>
-                                ) : (
-                                    crews.map((crew: { id: string, name: string, description: string | null, members: any[], project: { name: string } | null }) => (
-                                        <div key={crew.id} className="group border border-slate-200 dark:border-slate-800 rounded-xl p-4 hover:border-slate-300 dark:hover:border-slate-700 bg-white dark:bg-slate-900 transition-colors">
+                            {crews.length === 0 ? (
+                                <div className="text-center py-16 flex flex-col items-center bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800">
+                                    <Users className="text-slate-300 dark:text-slate-600 mb-4" size={48} strokeWidth={1} />
+                                    <p className="text-slate-500 font-medium">No crews created yet.</p>
+                                </div>
+                            ) : (
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {crews.map((crew: { id: string, name: string, description: string | null, members: any[], project: { name: string } | null }) => (
+                                        <div key={crew.id} className="group border border-slate-200 dark:border-slate-800 rounded-xl p-4 hover:border-slate-300 dark:hover:border-slate-700 bg-white dark:bg-slate-900 transition-colors shadow-sm">
                                             <div className="flex justify-between items-start mb-4">
-                                                <div className="flex items-center gap-4">
+                                                <div className="flex items-center gap-3 min-w-0">
                                                     <div className="size-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-semibold text-sm uppercase shrink-0">
                                                         {crew.name.substring(0, 2)}
                                                     </div>
-                                                    <div>
-                                                        <h4 className="font-medium text-slate-900 dark:text-white text-base">{crew.name}</h4>
-                                                        <p className="text-xs text-slate-500 font-medium">{crew.description || "No description provided."}</p>
+                                                    <div className="min-w-0">
+                                                        <h4 className="font-medium text-slate-900 dark:text-white text-base truncate">{crew.name}</h4>
+                                                        <p className="text-xs text-slate-500 font-medium truncate">{crew.description || "No description provided."}</p>
                                                     </div>
                                                 </div>
                                                 <div className="flex items-center gap-2 shrink-0">
@@ -122,38 +124,33 @@ export default async function CrewsPage() {
                                                 )}
                                             </div>
                                         </div>
-                                    ))
-                                )}
-                            </div>
+                                    ))}
+                                </div>
+                            )}
                         </FadeIn>
 
-                        {/* Workers List */}
-                        <FadeIn delay={0.25} className="min-w-0 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col h-[600px] relative">
-                            <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50">
-                                <h3 className="font-semibold text-lg flex items-center gap-2 text-slate-900 dark:text-white"><BadgeInfo className="text-primary" size={24} strokeWidth={2.5} /> Personnel Directory</h3>
-                            </div>
-                            <div className="flex-1 overflow-y-auto overflow-x-auto p-0 relative w-full">
-                                <WorkerDirectoryTable
-                                    workers={workers.map(w => ({
-                                        id: w.id,
-                                        name: w.name,
-                                        email: w.email,
-                                        role: w.role,
-                                        employeeType: w.employeeType,
-                                        baseHourlyRate: w.baseHourlyRate,
-                                        dailyRate: w.dailyRate,
-                                        otMultiplier: w.otMultiplier,
-                                        minHourlyGuarantee: w.minHourlyGuarantee,
-                                        minDailyGuarantee: w.minDailyGuarantee,
-                                        pieceRateEnabled: w.pieceRateEnabled,
-                                        crewId: w.crewId,
-                                        telegramChatId: w.telegramChatId,
-                                        jobTitle: w.jobTitle,
-                                        crew: w.crew ? { id: w.crew.id, name: w.crew.name } : null,
-                                    }))}
-                                    crews={crews.map(c => ({ id: c.id, name: c.name }))}
-                                />
-                            </div>
+                        {/* Personnel Directory */}
+                        <FadeIn delay={0.25} className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+                            <WorkerDirectoryTable
+                                workers={workers.map(w => ({
+                                    id: w.id,
+                                    name: w.name,
+                                    email: w.email,
+                                    role: w.role,
+                                    employeeType: w.employeeType,
+                                    baseHourlyRate: w.baseHourlyRate,
+                                    dailyRate: w.dailyRate,
+                                    otMultiplier: w.otMultiplier,
+                                    minHourlyGuarantee: w.minHourlyGuarantee,
+                                    minDailyGuarantee: w.minDailyGuarantee,
+                                    pieceRateEnabled: w.pieceRateEnabled,
+                                    crewId: w.crewId,
+                                    telegramChatId: w.telegramChatId,
+                                    jobTitle: w.jobTitle,
+                                    crew: w.crew ? { id: w.crew.id, name: w.crew.name } : null,
+                                }))}
+                                crews={crews.map(c => ({ id: c.id, name: c.name }))}
+                            />
                         </FadeIn>
                     </div>
 
