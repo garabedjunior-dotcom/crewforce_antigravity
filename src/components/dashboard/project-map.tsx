@@ -101,19 +101,12 @@ export function ProjectMap({ projects }: ProjectMapProps) {
             .addAttribution('<a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a> | &copy; <a href="https://carto.com" target="_blank" rel="noopener">CARTO</a>')
             .addTo(map);
 
-        // Light: Standard OpenStreetMap
-        const lightUrl = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+        // Universal Layer: OpenStreetMap (Detailed topographic view like Google Maps)
+        const mapUrl = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
 
-        // Dark: CartoDB Dark Matter (proper endpoint)
-        const darkUrl = "https://{s}.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}{r}.png";
-
-        // Determine current theme (account for 'system')
-        const currentTheme = theme === 'system' ? systemTheme : theme;
-        const isDark = currentTheme === 'dark';
-
-        const tileLayer = L.tileLayer(isDark ? darkUrl : lightUrl, {
+        const tileLayer = L.tileLayer(mapUrl, {
             maxZoom: 19,
-            attribution: isDark ? '&copy; OpenStreetMap &copy; CARTO' : '&copy; OpenStreetMap'
+            attribution: '&copy; OpenStreetMap'
         }).addTo(map);
 
         tileLayerRef.current = tileLayer;
@@ -147,20 +140,16 @@ export function ProjectMap({ projects }: ProjectMapProps) {
         };
     }, [projects]); // Re-run if projects change
 
-    // Watch for theme changes and update the tile layer URL without recreating the map
+    // No longer need to hot-swap URLs for theme changes, as the CSS filter will handle dimming
     useEffect(() => {
-        if (!tileLayerRef.current) return;
-        const lightUrl = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
-        const darkUrl = "https://{s}.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}{r}.png";
-        const currentTheme = theme === 'system' ? systemTheme : theme;
-        const isDark = currentTheme === 'dark';
-
-        tileLayerRef.current.setUrl(isDark ? darkUrl : lightUrl);
+        // Just keeping this empty or handle other theme stuff if needed
     }, [theme, systemTheme]);
+
+    const isDark = (theme === 'system' ? systemTheme : theme) === 'dark';
 
     return (
         <div className="relative w-full h-full min-h-[400px] flex-1 isolate z-0">
-            <div ref={mapRef} className="absolute inset-0 rounded-xl z-0" style={{ minHeight: "100%" }} />
+            <div ref={mapRef} className={`absolute inset-0 rounded-xl z-0 ${isDark ? 'map-dark-mode' : ''}`} style={{ minHeight: "100%" }} />
 
             {/* Subtle vignette for depth integration */}
             <div className="absolute inset-0 rounded-xl pointer-events-none z-[2]"
@@ -175,14 +164,19 @@ export function ProjectMap({ projects }: ProjectMapProps) {
                     background: transparent !important;
                 }
 
-                /* ─── Dark Mode Background ─── */
-                .dark .leaflet-container {
-                    background: transparent !important;
+                /* ─── Dark Mode UX Map Dimming ─── */
+                /* Apply soft dimming straight mapping Container via dynamic class */
+                .map-dark-mode .leaflet-tile-pane {
+                    filter: brightness(0.65) contrast(1.1) saturate(0.8) hue-rotate(350deg) !important;
+                    transition: filter 0.3s ease;
+                }
+                .map-dark-mode .leaflet-container {
+                    background: #0f172a !important; /* blend map edges with theme */
                 }
 
                 /* Fix Leaflet Tile Images getting hidden by globals */
                 .leaflet-tile {
-                    filter: none !important;
+                    /* ensure no general blanket filters */
                 }
 
                 /* Prevent markers/popups/controls from being inverted */
