@@ -8,7 +8,7 @@ import { z } from "zod";
 
 const workerUpdateSchema = z.object({
     name: z.string().nullable().optional(),
-    email: z.string().email().nullable().optional(),
+    email: z.union([z.string().email(), z.literal(""), z.null()]).optional(),
     employeeType: z.enum(["W2", "1099"]),
     baseHourlyRate: z.number().min(0),
     dailyRate: z.number().min(0),
@@ -55,13 +55,14 @@ export async function createWorker(formData: FormData) {
 
 export async function updateWorkerSettings(workerId: string, data: unknown) {
     await requireAuth(["ADMIN", "MANAGER"]);
-    const validated = workerUpdateSchema.parse(data);
     try {
+        const validated = workerUpdateSchema.parse(data);
+
         await prisma.user.update({
             where: { id: workerId },
             data: {
                 name: validated.name,
-                email: validated.email,
+                email: validated.email === "" ? null : validated.email,
                 employeeType: validated.employeeType,
                 baseHourlyRate: validated.baseHourlyRate,
                 dailyRate: validated.dailyRate,
@@ -80,6 +81,7 @@ export async function updateWorkerSettings(workerId: string, data: unknown) {
         return { success: true };
     } catch (error) {
         if (error instanceof z.ZodError) {
+            console.error("Zod Validation Error:", error.issues);
             return { success: false, error: "Invalid input data." };
         }
         console.error("Failed to update worker settings:", error);
