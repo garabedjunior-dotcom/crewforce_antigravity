@@ -4,6 +4,7 @@ import { Header } from "@/components/layout/header";
 import Link from "next/link";
 import { createProject } from "@/app/actions/project-actions";
 import { useState } from "react";
+import { ChevronRight, MapPin, User, Compass, Plus, Loader2 } from "lucide-react";
 
 export default function NewProjectPage() {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -20,19 +21,19 @@ export default function NewProjectPage() {
     return (
         <main className="flex-1 flex flex-col overflow-hidden">
             <Header title="New Project" />
-            <div className="flex-1 overflow-y-auto bg-background-light dark:bg-background-dark p-8">
+            <div className="flex-1 overflow-y-auto bg-slate-50 dark:bg-slate-950 p-8">
                 <div className="max-w-2xl mx-auto">
 
                     {/* Breadcrumbs */}
                     <div className="mb-6 flex items-center gap-2 text-sm text-slate-500">
                         <Link href="/projects" className="hover:text-primary transition-colors">Projects</Link>
-                        <span className="material-symbols-outlined text-sm">chevron_right</span>
+                        <ChevronRight size={14} className="text-slate-400" />
                         <span className="font-semibold text-slate-900 dark:text-white">New Project</span>
                     </div>
 
-                    <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+                    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
                         <div className="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
-                            <h1 className="text-2xl font-black text-slate-900 dark:text-white">Create New Project</h1>
+                            <h1 className="text-2xl font-semibold text-slate-900 dark:text-white">Create New Project</h1>
                             <p className="text-sm text-slate-500 mt-1">Fill in the details to start tracking a new infrastructure project.</p>
                         </div>
 
@@ -40,7 +41,7 @@ export default function NewProjectPage() {
 
                             {/* Project Name */}
                             <div className="space-y-1.5">
-                                <label htmlFor="name" className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                <label htmlFor="name" className="text-xs font-medium text-slate-500 uppercase tracking-wider">
                                     Project Name <span className="text-red-500">*</span>
                                 </label>
                                 <input
@@ -55,7 +56,7 @@ export default function NewProjectPage() {
 
                             {/* Description */}
                             <div className="space-y-1.5">
-                                <label htmlFor="description" className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                <label htmlFor="description" className="text-xs font-medium text-slate-500 uppercase tracking-wider">
                                     Description
                                 </label>
                                 <textarea
@@ -70,11 +71,11 @@ export default function NewProjectPage() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {/* Location */}
                                 <div className="space-y-1.5">
-                                    <label htmlFor="location" className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                    <label htmlFor="location" className="text-xs font-medium text-slate-500 uppercase tracking-wider">
                                         Location
                                     </label>
                                     <div className="relative">
-                                        <span className="material-symbols-outlined text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 text-[18px]">location_on</span>
+                                        <MapPin className="text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" size={16} />
                                         <input
                                             id="location"
                                             name="location"
@@ -87,11 +88,11 @@ export default function NewProjectPage() {
 
                                 {/* Client */}
                                 <div className="space-y-1.5">
-                                    <label htmlFor="clientName" className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                    <label htmlFor="clientName" className="text-xs font-medium text-slate-500 uppercase tracking-wider">
                                         Client Name
                                     </label>
                                     <div className="relative">
-                                        <span className="material-symbols-outlined text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 text-[18px]">person</span>
+                                        <User className="text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" size={16} />
                                         <input
                                             id="clientName"
                                             name="clientName"
@@ -106,7 +107,7 @@ export default function NewProjectPage() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {/* Budget */}
                                 <div className="space-y-1.5">
-                                    <label htmlFor="budget" className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                    <label htmlFor="budget" className="text-xs font-medium text-slate-500 uppercase tracking-wider">
                                         Budget ($)
                                     </label>
                                     <div className="relative">
@@ -124,7 +125,7 @@ export default function NewProjectPage() {
 
                                 {/* Deadline */}
                                 <div className="space-y-1.5">
-                                    <label htmlFor="deadline" className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                    <label htmlFor="deadline" className="text-xs font-medium text-slate-500 uppercase tracking-wider">
                                         Target Deadline
                                     </label>
                                     <input
@@ -139,11 +140,11 @@ export default function NewProjectPage() {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 {/* Latitude */}
                                 <div className="space-y-1.5">
-                                    <label htmlFor="latitude" className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                    <label htmlFor="latitude" className="text-xs font-medium text-slate-500 uppercase tracking-wider">
                                         Latitude
                                     </label>
                                     <div className="relative">
-                                        <span className="material-symbols-outlined text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 text-[18px]">explore</span>
+                                        <Compass className="text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" size={16} />
                                         <input
                                             id="latitude"
                                             name="latitude"
@@ -157,11 +158,11 @@ export default function NewProjectPage() {
 
                                 {/* Longitude */}
                                 <div className="space-y-1.5">
-                                    <label htmlFor="longitude" className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                                    <label htmlFor="longitude" className="text-xs font-medium text-slate-500 uppercase tracking-wider">
                                         Longitude
                                     </label>
                                     <div className="relative">
-                                        <span className="material-symbols-outlined text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 text-[18px]">explore</span>
+                                        <Compass className="text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" size={16} />
                                         <input
                                             id="longitude"
                                             name="longitude"
@@ -178,19 +179,19 @@ export default function NewProjectPage() {
                             <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
                                 <Link
                                     href="/projects"
-                                    className="px-6 py-2.5 rounded-lg font-bold text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                                    className="px-6 py-2.5 rounded-lg font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
                                 >
                                     Cancel
                                 </Link>
                                 <button
                                     type="submit"
                                     disabled={isSubmitting}
-                                    className="px-6 py-2.5 rounded-lg font-bold text-sm bg-primary text-white hover:bg-primary/90 transition-colors flex items-center gap-2 disabled:opacity-50"
+                                    className="px-6 py-2.5 rounded-lg font-medium text-sm bg-primary text-white hover:bg-primary/90 transition-colors flex items-center gap-2 disabled:opacity-50"
                                 >
                                     {isSubmitting ? (
-                                        <span className="material-symbols-outlined text-sm animate-spin">refresh</span>
+                                        <Loader2 className="animate-spin" size={16} />
                                     ) : (
-                                        <span className="material-symbols-outlined text-sm">add</span>
+                                        <Plus size={16} />
                                     )}
                                     {isSubmitting ? "Creating..." : "Create Project"}
                                 </button>

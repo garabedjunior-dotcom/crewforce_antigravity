@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { updateProject, deleteProject, ProjectUpdateData } from "@/app/actions/project-actions";
 import { toast } from "sonner";
 import { X, Save, FileEdit, ArchiveRestore, Trash2 } from "lucide-react";
@@ -23,6 +23,17 @@ export function EditProjectModal({ project }: { project: ProjectType }) {
     const [isSaving, setIsSaving] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const router = useRouter();
+
+    const handleKeyDown = useCallback((e: KeyboardEvent) => {
+        if (e.key === "Escape" && !isSaving && !isDeleting) setIsOpen(false);
+    }, [isSaving, isDeleting]);
+
+    useEffect(() => {
+        if (isOpen) {
+            document.addEventListener("keydown", handleKeyDown);
+            return () => document.removeEventListener("keydown", handleKeyDown);
+        }
+    }, [isOpen, handleKeyDown]);
 
     const [formData, setFormData] = useState<ProjectUpdateData>({
         name: project.name,
@@ -83,20 +94,20 @@ export function EditProjectModal({ project }: { project: ProjectType }) {
         <>
             <button
                 onClick={() => setIsOpen(true)}
-                className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 px-6 py-2 rounded-lg font-bold shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700/80 transition-colors flex items-center gap-2"
+                className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 px-6 py-2 rounded-lg font-medium shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700/80 transition-colors flex items-center gap-2"
             >
                 <FileEdit size={16} strokeWidth={2.5} />
                 Edit Details
             </button>
 
             {isOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
-                    <div className="bg-white dark:bg-slate-900 w-full max-w-xl rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 flex flex-col max-h-[90vh]">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200" onClick={(e) => { if (e.target === e.currentTarget) setIsOpen(false); }}>
+                    <div className="bg-white dark:bg-slate-900 w-full max-w-xl rounded-xl shadow-xl border border-slate-200 dark:border-slate-800 flex flex-col max-h-[90vh]">
                         {/* Header */}
                         <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50">
                             <div>
-                                <h2 className="text-xl font-black text-slate-900 dark:text-white">Edit Project</h2>
-                                <p className="text-xs text-slate-500 font-bold mt-1 uppercase tracking-wider">{project.id.slice(-6)}</p>
+                                <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Edit Project</h2>
+                                <p className="text-xs text-slate-500 font-medium mt-1 uppercase tracking-wider">{project.id.slice(-6)}</p>
                             </div>
                             <button
                                 onClick={() => setIsOpen(false)}
@@ -109,7 +120,7 @@ export function EditProjectModal({ project }: { project: ProjectType }) {
                         {/* Body Form */}
                         <div className="flex-1 overflow-y-auto p-6 space-y-5">
                             <div className="space-y-1">
-                                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Project Name</label>
+                                <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">Project Name</label>
                                 <input
                                     type="text"
                                     className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-3 font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50"
@@ -120,7 +131,7 @@ export function EditProjectModal({ project }: { project: ProjectType }) {
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-1">
-                                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Status</label>
+                                    <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">Status</label>
                                     <select
                                         className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-3 font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50"
                                         value={formData.status}
@@ -132,7 +143,7 @@ export function EditProjectModal({ project }: { project: ProjectType }) {
                                     </select>
                                 </div>
                                 <div className="space-y-1">
-                                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Budget ($)</label>
+                                    <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">Budget ($)</label>
                                     <input
                                         type="number"
                                         className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-3 font-bold text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50"
@@ -144,7 +155,7 @@ export function EditProjectModal({ project }: { project: ProjectType }) {
 
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-1">
-                                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Latitude</label>
+                                    <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">Latitude</label>
                                     <input
                                         type="number"
                                         step="any"
@@ -154,7 +165,7 @@ export function EditProjectModal({ project }: { project: ProjectType }) {
                                     />
                                 </div>
                                 <div className="space-y-1">
-                                    <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Longitude</label>
+                                    <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">Longitude</label>
                                     <input
                                         type="number"
                                         step="any"
@@ -166,7 +177,7 @@ export function EditProjectModal({ project }: { project: ProjectType }) {
                             </div>
 
                             <div className="space-y-1">
-                                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Location / Address</label>
+                                <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">Location / Address</label>
                                 <input
                                     type="text"
                                     className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-3 font-medium text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50"
@@ -176,7 +187,7 @@ export function EditProjectModal({ project }: { project: ProjectType }) {
                             </div>
 
                             <div className="space-y-1">
-                                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Client Name</label>
+                                <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">Client Name</label>
                                 <input
                                     type="text"
                                     className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-3 font-medium text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/50"
@@ -186,7 +197,7 @@ export function EditProjectModal({ project }: { project: ProjectType }) {
                             </div>
 
                             <div className="space-y-1">
-                                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Description</label>
+                                <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">Description</label>
                                 <textarea
                                     className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-3 font-medium text-slate-900 dark:text-white h-24 focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
                                     value={formData.description || ""}
@@ -201,7 +212,7 @@ export function EditProjectModal({ project }: { project: ProjectType }) {
                             <button
                                 onClick={handleDelete}
                                 disabled={isDeleting || isSaving}
-                                className="text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 px-4 py-2.5 rounded-lg flex items-center gap-2 font-bold text-sm transition-colors"
+                                className="text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 px-4 py-2.5 rounded-lg flex items-center gap-2 font-medium text-sm transition-colors"
                             >
                                 {isDeleting ? <ArchiveRestore size={16} className="animate-spin" /> : <Trash2 size={16} />}
                                 Delete Project
@@ -209,14 +220,14 @@ export function EditProjectModal({ project }: { project: ProjectType }) {
 
                             <div className="flex gap-3">
                                 <button
-                                    className="px-5 py-2.5 rounded-lg font-bold text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                                    className="px-5 py-2.5 rounded-lg font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                                     onClick={() => setIsOpen(false)}
                                     disabled={isSaving || isDeleting}
                                 >
                                     Cancel
                                 </button>
                                 <button
-                                    className="px-5 py-2.5 rounded-lg font-bold text-sm bg-primary text-white hover:bg-primary/90 transition-colors flex items-center gap-2 shadow-lg shadow-primary/20"
+                                    className="px-5 py-2.5 rounded-lg font-medium text-sm bg-primary text-white hover:bg-primary/90 transition-colors flex items-center gap-2 shadow-lg shadow-primary/20"
                                     onClick={handleSave}
                                     disabled={isSaving || isDeleting}
                                 >

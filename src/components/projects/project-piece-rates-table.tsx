@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { updateProjectPieceRate, ProjectPieceRateUpdateData } from "@/app/actions/rate-actions";
+import { GitBranch } from "lucide-react";
 
 type PayItemCatalog = {
     id: string;
@@ -48,11 +49,11 @@ export function ProjectPieceRatesTable({ projectId, catalogItems, existingPieceR
     };
 
     return (
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm overflow-hidden mt-8">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm overflow-hidden mt-8">
             <div className="px-6 py-5 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex justify-between items-center">
                 <div>
-                    <h3 className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                        <span className="material-symbols-outlined text-primary">account_tree</span>
+                    <h3 className="font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+                        <GitBranch className="text-primary" size={18} />
                         Rate Card do Projeto (Produção)
                     </h3>
                     <p className="text-xs text-slate-500 mt-1">Configuração de taxas variáveis da Obra que se sobrepõem ao Catálogo Global.</p>
@@ -62,7 +63,7 @@ export function ProjectPieceRatesTable({ projectId, catalogItems, existingPieceR
             <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                     <thead className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800">
-                        <tr className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">
+                        <tr className="text-[11px] uppercase font-medium text-slate-500 tracking-wider">
                             <th className="px-6 py-4 w-1/4">Código (Atividade)</th>
                             <th className="px-6 py-4 w-1/4">Descrição</th>
                             <th className="px-6 py-4">Valor Padrão (Global)</th>
@@ -109,7 +110,7 @@ export function ProjectPieceRatesTable({ projectId, catalogItems, existingPieceR
                                                 <button
                                                     type="submit"
                                                     disabled={isSavingThis}
-                                                    className="bg-primary/10 hover:bg-primary/20 text-primary px-4 py-1.5 rounded-lg text-xs font-bold transition-colors disabled:opacity-50 flex items-center gap-1 ml-auto"
+                                                    className="bg-primary/10 hover:bg-primary/20 text-primary px-4 py-1.5 rounded-lg text-xs font-medium transition-colors disabled:opacity-50 flex items-center gap-1 ml-auto"
                                                 >
                                                     {isSavingThis ? "Salvando..." : (customItem ? "Atualizar Rate" : "Definir Rate")}
                                                 </button>

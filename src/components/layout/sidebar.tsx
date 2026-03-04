@@ -20,13 +20,13 @@ export function Sidebar({ user }: { user?: any }) {
     ];
 
     return (
-        <aside className="w-64 border-r border-slate-200 dark:border-white/10 bg-white/80 dark:bg-[#0f172a]/80 backdrop-blur-xl flex flex-col shrink-0 shadow-[4px_0_24px_-12px_rgba(0,0,0,0.1)] z-30">
+        <aside className="w-64 bg-white dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 flex flex-col shrink-0 z-30">
             <div className="p-6 flex items-center gap-3">
-                <div className="bg-gradient-to-br from-primary to-orange-600 rounded-xl p-2.5 flex items-center justify-center text-white shadow-lg shadow-primary/20">
+                <div className="bg-gradient-to-br from-primary to-orange-500 rounded-lg p-2 flex items-center justify-center text-white shadow-lg shadow-primary/20">
                     <HardHat size={20} strokeWidth={2.5} />
                 </div>
                 <div>
-                    <h1 className="text-lg font-black tracking-tight text-slate-900 dark:text-white leading-none">CrewForce</h1>
+                    <h1 className="text-lg font-semibold tracking-tight text-slate-900 dark:text-white leading-none">CrewForce</h1>
                     <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-0.5">Infrastructure OS</p>
                 </div>
             </div>
@@ -48,14 +48,14 @@ export function Sidebar({ user }: { user?: any }) {
                                     transition={{ type: "spring", stiffness: 350, damping: 30 }}
                                 />
                             )}
-                            <Icon size={18} strokeWidth={isActive ? 2.5 : 2} className="relative z-10 transition-transform group-hover:scale-110" />
-                            <span className={`relative z-10 text-sm ${isActive ? 'font-bold' : 'font-medium'}`}>{item.label}</span>
+                            <Icon size={18} strokeWidth={isActive ? 2.5 : 2} className="relative z-10" />
+                            <span className={`relative z-10 text-sm ${isActive ? 'font-semibold' : 'font-medium'}`}>{item.label}</span>
                         </Link>
                     )
                 })}
             </nav>
 
-            <div className="p-4 border-t border-slate-100 dark:border-white/5 flex flex-col gap-2">
+            <div className="p-4 border-t border-slate-200 dark:border-slate-800 flex flex-col gap-2">
                 <Link href="/settings" className="flex items-center gap-3 p-2 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 cursor-pointer transition-all duration-200 group">
                     <div className="size-10 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden border border-primary/20 group-hover:border-primary/40 transition-colors">
                         <User className="text-primary" size={18} />

@@ -6,6 +6,7 @@ import { FadeIn } from "@/components/ui/fade-in";
 import { EditProjectModal } from "@/components/dashboard/edit-project-modal";
 import { MapWrapper } from "@/components/dashboard/map-wrapper";
 import { Metadata } from "next";
+import { ChevronRight, Wallet, FileText, Users, CalendarDays, Clock, Maximize2 } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
 
@@ -52,9 +53,9 @@ export default async function ProjectDetailsPage(props: { params: Promise<{ id: 
                     {/* Breadcrumbs */}
                     <div className="mb-4 flex items-center gap-2 text-sm text-slate-500">
                         <Link href="/" className="hover:text-primary transition-colors">Dashboard</Link>
-                        <span className="material-symbols-outlined text-sm">chevron_right</span>
+                        <ChevronRight size={14} className="text-slate-400" />
                         <Link href="/projects" className="hover:text-primary transition-colors">Projects</Link>
-                        <span className="material-symbols-outlined text-sm">chevron_right</span>
+                        <ChevronRight size={14} className="text-slate-400" />
                         <span className="font-semibold text-slate-900 dark:text-white">{project.name}</span>
                     </div>
 
@@ -63,44 +64,47 @@ export default async function ProjectDetailsPage(props: { params: Promise<{ id: 
                             <div className="flex justify-between items-end">
                                 <div>
                                     <div className="flex items-center gap-2 mb-2">
-                                        <span className="bg-emerald-100 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase">{project.status}</span>
+                                        <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20 text-[11px] font-semibold px-2 py-0.5 rounded-full uppercase">{project.status}</span>
                                         <span className="text-xs text-slate-400 font-medium">ID: {project.id.slice(-5).toUpperCase()}</span>
                                     </div>
-                                    <h1 className="text-4xl font-black text-slate-900 dark:text-white">{project.name}</h1>
+                                    <h1 className="text-3xl font-semibold text-slate-900 dark:text-white">{project.name}</h1>
                                     <p className="text-slate-500 mt-1">{project.location || "Location not specified."}</p>
                                 </div>
                                 <div className="flex gap-3">
-                                    <Link href={`/projects/${project.id}/rates`} className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 px-6 py-2 rounded-lg font-bold shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700/80 transition-colors flex items-center gap-2">
-                                        <span className="material-symbols-outlined text-sm">payments</span>
+                                    <Link href={`/projects/${project.id}/rates`} className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 px-6 py-2 rounded-lg font-medium shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700/80 transition-colors flex items-center gap-2">
+                                        <Wallet size={16} />
                                         Team & Rates
                                     </Link>
                                     <EditProjectModal project={project} />
-                                    <button className="bg-primary text-white px-6 py-2 rounded-lg font-bold shadow-sm hover:bg-primary/90 transition-colors">Review {project.dailyLogs.length} Logs</button>
+                                    <button className="bg-primary text-white px-6 py-2 rounded-lg font-medium shadow-sm hover:bg-primary/90 transition-colors">Review {project.dailyLogs.length} Logs</button>
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                                 {[
-                                    { label: "Daily Logs", val: project.dailyLogs.length.toString(), sub: "reports", icon: "feed", trend: project.dailyLogs.length > 0 ? "Active" : "No logs yet" },
-                                    { label: "Budget", val: project.budget ? `$${(project.budget / 1000).toFixed(0)}k` : "N/A", sub: "", icon: "payments", trend: project.budget ? "Tracked" : "Not set" },
-                                    { label: "Crew Size", val: project.crews.length.toString(), sub: "Active", icon: "groups", trend: project.crews.length > 0 ? "Assigned" : "No crews" },
-                                    { label: "Deadline", val: project.deadline ? new Date(project.deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : "N/A", sub: "", icon: "event", trend: project.deadline ? `${Math.max(0, Math.ceil((new Date(project.deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))} days left` : "Not set" }
-                                ].map((card, i) => (
-                                    <div key={i} className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:-translate-y-1 transition-transform">
+                                    { label: "Daily Logs", val: project.dailyLogs.length.toString(), sub: "reports", icon: FileText, trend: project.dailyLogs.length > 0 ? "Active" : "No logs yet" },
+                                    { label: "Budget", val: project.budget ? `$${(project.budget / 1000).toFixed(0)}k` : "N/A", sub: "", icon: Wallet, trend: project.budget ? "Tracked" : "Not set" },
+                                    { label: "Crew Size", val: project.crews.length.toString(), sub: "Active", icon: Users, trend: project.crews.length > 0 ? "Assigned" : "No crews" },
+                                    { label: "Deadline", val: project.deadline ? new Date(project.deadline).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : "N/A", sub: "", icon: CalendarDays, trend: project.deadline ? `${Math.max(0, Math.ceil((new Date(project.deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))} days left` : "Not set" }
+                                ].map((card, i) => {
+                                    const CardIcon = card.icon;
+                                    return (
+                                    <div key={i} className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-colors">
                                         <div className="flex items-center justify-between mb-2">
-                                            <p className="text-slate-500 text-[10px] font-bold uppercase">{card.label}</p>
-                                            <span className="material-symbols-outlined text-primary">{card.icon}</span>
+                                            <p className="text-slate-500 text-[11px] font-medium uppercase">{card.label}</p>
+                                            <CardIcon className="text-primary" size={20} />
                                         </div>
                                         <p className="text-2xl font-bold">{card.val} <span className="text-sm font-normal text-slate-400">{card.sub}</span></p>
-                                        <p className="text-green-600 text-xs font-bold mt-1">{card.trend}</p>
+                                        <p className="text-emerald-600 text-xs font-medium mt-1">{card.trend}</p>
                                     </div>
-                                ))}
+                                    );
+                                })}
                             </div>
 
 
                             <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
-                                <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
-                                    <span className="material-symbols-outlined text-primary">feed</span>
+                                <h2 className="text-lg font-semibold mb-6 flex items-center gap-2">
+                                    <FileText className="text-primary" size={18} />
                                     Recent Daily Logs
                                 </h2>
                                 {project.dailyLogs.length === 0 ? (
@@ -118,7 +122,7 @@ export default async function ProjectDetailsPage(props: { params: Promise<{ id: 
                                                         <span className="text-xs text-slate-500 ml-2">via Telegram Bot</span>
                                                     </div>
                                                     <span className="text-xs text-slate-500 flex items-center gap-1">
-                                                        <span className="material-symbols-outlined text-[12px]">schedule</span>
+                                                        <Clock size={12} className="text-slate-400" />
                                                         {new Date(log.dateReported).toLocaleString()}
                                                     </span>
                                                 </div>
@@ -140,9 +144,9 @@ export default async function ProjectDetailsPage(props: { params: Promise<{ id: 
                         <FadeIn delay={0.3} direction="left" className="col-span-12 lg:col-span-4 flex flex-col gap-6">
                             <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col h-[400px]">
                                 <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center relative z-10 bg-white dark:bg-slate-900">
-                                    <h3 className="font-bold">Project Schematic</h3>
+                                    <h3 className="font-semibold">Project Schematic</h3>
                                     {project.latitude && project.longitude && (
-                                        <Link href="/map" className="material-symbols-outlined text-slate-400 hover:text-slate-600 transition-colors">fullscreen</Link>
+                                        <Link href="/map" className="text-slate-400 hover:text-slate-600 transition-colors"><Maximize2 size={16} /></Link>
                                     )}
                                 </div>
                                 <div className="flex-1 bg-slate-50 dark:bg-slate-900 relative group z-0">
@@ -163,7 +167,7 @@ export default async function ProjectDetailsPage(props: { params: Promise<{ id: 
                                         <>
                                             <img src="https://images.unsplash.com/photo-1541888081604-5f56ac01bd15?q=80&w=2670&auto=format&fit=crop" className="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-700" alt="Map schematic" />
                                             <div className="absolute inset-0 flex items-center justify-center flex-col bg-black/50 text-white">
-                                                <div className="w-4 h-4 bg-primary rounded-full ring-4 ring-primary/20 animate-pulse mb-3"></div>
+                                                <div className="w-4 h-4 bg-primary rounded-full ring-4 ring-primary/20 mb-3"></div>
                                                 <span className="text-sm font-bold text-center px-6 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">No coordinates set.<br />Edit project to add them.</span>
                                             </div>
                                         </>
@@ -172,7 +176,7 @@ export default async function ProjectDetailsPage(props: { params: Promise<{ id: 
                             </div>
 
                             <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
-                                <h3 className="font-bold mb-4">Active Crews</h3>
+                                <h3 className="font-semibold mb-4">Active Crews</h3>
                                 {project.crews.length === 0 ? (
                                     <div className="text-sm text-slate-500 text-center py-4">No active crews assigned.</div>
                                 ) : (
@@ -188,7 +192,7 @@ export default async function ProjectDetailsPage(props: { params: Promise<{ id: 
                                                         <p className="text-[10px] text-slate-500">{crew.description || "On Site"}</p>
                                                     </div>
                                                 </div>
-                                                <div className="size-2 rounded-full bg-green-500 animate-pulse"></div>
+                                                <div className="size-2 rounded-full bg-green-500"></div>
                                             </div>
                                         ))}
                                     </div>

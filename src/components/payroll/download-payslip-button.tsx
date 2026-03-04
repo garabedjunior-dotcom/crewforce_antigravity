@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Document, Page, Text, View, StyleSheet, PDFDownloadLink } from "@react-pdf/renderer";
+import { FileText, Loader2 } from "lucide-react";
 import type { PayrollResult } from "@/lib/payroll-calculator";
 
 const styles = StyleSheet.create({
@@ -113,15 +114,13 @@ export function DownloadPayslipButton({ workerData, startDate, endDate }: { work
         <PDFDownloadLink
             document={<PayslipDocument workerData={workerData} startDate={startDate} endDate={endDate} />}
             fileName={`Payslip_${workerData.workerName.replace(/\s+/g, '_')}_${startDate.replace(/\//g, '-')}.pdf`}
-            className="text-primary hover:text-emerald-600 transition-colors flex items-center justify-end gap-1 font-bold text-sm"
+            className="text-primary hover:text-emerald-600 transition-colors flex items-center justify-end gap-1 font-medium text-sm"
         >
             {/* 
             // @ts-ignore */}
             {({ loading }) => (
                 <>
-                    <span className="material-symbols-outlined text-[18px]">
-                        {loading ? 'hourglass_empty' : 'picture_as_pdf'}
-                    </span>
+                    {loading ? <Loader2 className="animate-spin" size={16} /> : <FileText size={16} />}
                     {loading ? 'Generating PDF...' : 'Download PDF'}
                 </>
             )}

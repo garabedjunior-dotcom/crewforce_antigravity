@@ -10,7 +10,7 @@ export default async function DashboardLayout({
     const session = await auth();
 
     return (
-        <div className="flex h-screen w-full overflow-hidden bg-slate-50 dark:bg-[#0f172a]">
+        <div className="flex h-screen w-full overflow-hidden bg-slate-50 dark:bg-slate-950">
             <Sidebar user={session?.user} />
             <AnimatedLayout>
                 {children}

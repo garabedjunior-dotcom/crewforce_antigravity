@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { updateWorkerSettings, archiveWorker, WorkerUpdateData } from "@/app/actions/worker-actions";
 import { toast } from "sonner";
-import { Trash2 } from "lucide-react";
+import { Trash2, X, Loader2, Save, Send } from "lucide-react";
 
 type Worker = {
     id: string;
@@ -72,6 +72,17 @@ export function WorkerSettingsModal({ worker, crews, isOpen, onClose }: WorkerSe
         }
     }, [worker]);
 
+    const handleKeyDown = useCallback((e: KeyboardEvent) => {
+        if (e.key === "Escape") onClose();
+    }, [onClose]);
+
+    useEffect(() => {
+        if (isOpen) {
+            document.addEventListener("keydown", handleKeyDown);
+            return () => document.removeEventListener("keydown", handleKeyDown);
+        }
+    }, [isOpen, handleKeyDown]);
+
     if (!isOpen || !worker) return null;
 
     const handleSave = async () => {
@@ -113,13 +124,13 @@ export function WorkerSettingsModal({ worker, crews, isOpen, onClose }: WorkerSe
     };
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6 overflow-hidden">
-            <div className="bg-white dark:bg-slate-900 w-full max-w-lg rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 flex flex-col max-h-full">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 sm:p-6 overflow-hidden animate-in fade-in duration-150" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+            <div className="bg-white dark:bg-slate-900 w-full max-w-lg rounded-2xl shadow-xl border border-slate-200 dark:border-slate-800 flex flex-col max-h-full animate-in zoom-in-95 duration-150">
 
                 {/* Header */}
                 <div className="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50 shrink-0">
                     <div>
-                        <h2 className="text-xl font-bold text-slate-900 dark:text-white">
+                        <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
                             {worker.name || "Worker Settings"}
                         </h2>
                         <p className="text-xs text-slate-500 font-medium">{worker.role} • Settings</p>
@@ -128,7 +139,7 @@ export function WorkerSettingsModal({ worker, crews, isOpen, onClose }: WorkerSe
                         onClick={onClose}
                         className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-800 rounded-full transition-colors"
                     >
-                        <span className="material-symbols-outlined text-sm">close</span>
+                        <X size={16} strokeWidth={2.5} />
                     </button>
                 </div>
 
@@ -137,10 +148,10 @@ export function WorkerSettingsModal({ worker, crews, isOpen, onClose }: WorkerSe
 
                     {/* Basic Info */}
                     <div className="space-y-4">
-                        <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Profile Info</h3>
+                        <h3 className="text-sm font-medium text-slate-900 dark:text-white uppercase tracking-wider">Profile Info</h3>
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-1">
-                                <label className="text-xs font-semibold text-slate-500">Full Name</label>
+                                <label className="text-xs font-medium text-slate-500">Full Name</label>
                                 <input
                                     type="text"
                                     className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-lg px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-primary"
@@ -150,7 +161,7 @@ export function WorkerSettingsModal({ worker, crews, isOpen, onClose }: WorkerSe
                                 />
                             </div>
                             <div className="space-y-1">
-                                <label className="text-xs font-semibold text-slate-500">Email Address</label>
+                                <label className="text-xs font-medium text-slate-500">Email Address</label>
                                 <input
                                     type="email"
                                     className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-lg px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-primary"
@@ -162,7 +173,7 @@ export function WorkerSettingsModal({ worker, crews, isOpen, onClose }: WorkerSe
                         </div>
                         <div className="grid grid-cols-1 gap-4 mt-4">
                             <div className="space-y-1">
-                                <label className="text-xs font-semibold text-slate-500">Job Title / Cargo na Obra</label>
+                                <label className="text-xs font-medium text-slate-500">Job Title / Cargo na Obra</label>
                                 <input
                                     type="text"
                                     className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-lg px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-primary"
@@ -177,11 +188,11 @@ export function WorkerSettingsModal({ worker, crews, isOpen, onClose }: WorkerSe
                     <hr className="border-slate-100 dark:border-slate-800" />
 
                     <div className="space-y-4">
-                        <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Assignments</h3>
+                        <h3 className="text-sm font-medium text-slate-900 dark:text-white uppercase tracking-wider">Assignments</h3>
 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-1">
-                                <label className="text-xs font-semibold text-slate-500">Employment Type</label>
+                                <label className="text-xs font-medium text-slate-500">Employment Type</label>
                                 <select
                                     className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-lg px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-primary"
                                     value={formData.employeeType}
@@ -192,7 +203,7 @@ export function WorkerSettingsModal({ worker, crews, isOpen, onClose }: WorkerSe
                                 </select>
                             </div>
                             <div className="space-y-1">
-                                <label className="text-xs font-semibold text-slate-500">Assigned Crew</label>
+                                <label className="text-xs font-medium text-slate-500">Assigned Crew</label>
                                 <select
                                     className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-lg px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-primary"
                                     value={formData.crewId || ""}
@@ -206,14 +217,14 @@ export function WorkerSettingsModal({ worker, crews, isOpen, onClose }: WorkerSe
                     </div>
 
                     <div className="space-y-4">
-                        <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Integrations</h3>
+                        <h3 className="text-sm font-medium text-slate-900 dark:text-white uppercase tracking-wider">Integrations</h3>
                         <div className="space-y-1">
-                            <label className="text-xs font-semibold text-slate-500 flex items-center justify-between">
+                            <label className="text-xs font-medium text-slate-500 flex items-center justify-between">
                                 Telegram Chat ID
                                 <span className="text-[10px] text-slate-400 font-normal">Provided by the bot when user sends /start</span>
                             </label>
                             <div className="relative">
-                                <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[18px]">send</span>
+                                <Send className="text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" size={16} />
                                 <input
                                     type="text"
                                     className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-lg pl-9 pr-3 py-2 text-sm font-medium focus:ring-2 focus:ring-primary"
@@ -229,11 +240,11 @@ export function WorkerSettingsModal({ worker, crews, isOpen, onClose }: WorkerSe
 
                     {/* Payroll Rates */}
                     <div className="space-y-4">
-                        <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Payroll Rates</h3>
+                        <h3 className="text-sm font-medium text-slate-900 dark:text-white uppercase tracking-wider">Payroll Rates</h3>
 
                         <div className="grid grid-cols-2 gap-4">
                             <div className="space-y-1">
-                                <label className="text-xs font-semibold text-slate-500 flex items-center justify-between">
+                                <label className="text-xs font-medium text-slate-500 flex items-center justify-between">
                                     Base Hourly Rate ($)
                                 </label>
                                 <input
@@ -244,7 +255,7 @@ export function WorkerSettingsModal({ worker, crews, isOpen, onClose }: WorkerSe
                                 />
                             </div>
                             <div className="space-y-1">
-                                <label className="text-xs font-semibold text-slate-500 flex items-center justify-between">
+                                <label className="text-xs font-medium text-slate-500 flex items-center justify-between">
                                     Daily Rate ($)
                                 </label>
                                 <input
@@ -255,7 +266,7 @@ export function WorkerSettingsModal({ worker, crews, isOpen, onClose }: WorkerSe
                                 />
                             </div>
                             <div className="space-y-1">
-                                <label className="text-xs font-semibold text-slate-500">OT Multiplier</label>
+                                <label className="text-xs font-medium text-slate-500">OT Multiplier</label>
                                 <input
                                     type="number" step="0.1"
                                     className="w-full bg-slate-50 dark:bg-slate-800 border-none rounded-lg px-3 py-2 text-sm font-medium focus:ring-2 focus:ring-primary"
@@ -270,13 +281,13 @@ export function WorkerSettingsModal({ worker, crews, isOpen, onClose }: WorkerSe
 
                     {/* Payment Rules / Toggles */}
                     <div className="space-y-4">
-                        <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">Payment Rules</h3>
+                        <h3 className="text-sm font-medium text-slate-900 dark:text-white uppercase tracking-wider">Payment Rules</h3>
 
                         <div className="space-y-3">
 
                             <label className="flex items-center justify-between p-3 rounded-xl border border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition-colors">
                                 <div>
-                                    <p className="text-sm font-bold text-slate-900 dark:text-white">Enable Piece Rate</p>
+                                    <p className="text-sm font-medium text-slate-900 dark:text-white">Enable Piece Rate</p>
                                     <p className="text-xs text-slate-500 font-medium">Earn based on exact field production logs</p>
                                 </div>
                                 <input
@@ -289,7 +300,7 @@ export function WorkerSettingsModal({ worker, crews, isOpen, onClose }: WorkerSe
 
                             <label className="flex items-center justify-between p-3 rounded-xl border border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition-colors">
                                 <div>
-                                    <p className="text-sm font-bold text-slate-900 dark:text-white">Minimum Hourly Guarantee</p>
+                                    <p className="text-sm font-medium text-slate-900 dark:text-white">Minimum Hourly Guarantee</p>
                                     <p className="text-xs text-amber-600 dark:text-amber-500 font-medium">Forces payment via Hourly if Piece Rate fails to match Base</p>
                                 </div>
                                 <input
@@ -309,7 +320,7 @@ export function WorkerSettingsModal({ worker, crews, isOpen, onClose }: WorkerSe
 
                             <label className="flex items-center justify-between p-3 rounded-xl border border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition-colors">
                                 <div>
-                                    <p className="text-sm font-bold text-slate-900 dark:text-white">Minimum Daily Guarantee</p>
+                                    <p className="text-sm font-medium text-slate-900 dark:text-white">Minimum Daily Guarantee</p>
                                     <p className="text-xs text-emerald-600 dark:text-emerald-500 font-medium">Forces payment via (Diárias / Meias Diárias) over piece rate</p>
                                 </div>
                                 <input
@@ -335,7 +346,7 @@ export function WorkerSettingsModal({ worker, crews, isOpen, onClose }: WorkerSe
                 {/* Footer */}
                 <div className="p-4 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center gap-3 bg-slate-50/50 dark:bg-slate-800/50 shrink-0">
                     <button
-                        className="px-4 py-2 rounded-lg font-bold text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors flex items-center gap-2"
+                        className="px-4 py-2 rounded-lg font-medium text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors flex items-center gap-2"
                         onClick={handleArchive}
                         disabled={isSaving}
                         title="Archive Worker"
@@ -346,21 +357,21 @@ export function WorkerSettingsModal({ worker, crews, isOpen, onClose }: WorkerSe
 
                     <div className="flex gap-3">
                         <button
-                            className="px-5 py-2 rounded-lg font-bold text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                            className="px-5 py-2 rounded-lg font-medium text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                             onClick={onClose}
                             disabled={isSaving}
                         >
                             Cancel
                         </button>
                         <button
-                            className="px-5 py-2 rounded-lg font-bold text-sm bg-primary text-white hover:bg-primary/90 transition-colors flex items-center gap-2"
+                            className="px-5 py-2 rounded-lg font-medium text-sm bg-primary text-white hover:bg-primary/90 transition-colors flex items-center gap-2"
                             onClick={handleSave}
                             disabled={isSaving}
                         >
                             {isSaving ? (
-                                <span className="material-symbols-outlined text-sm animate-spin">refresh</span>
+                                <Loader2 className="animate-spin" size={16} />
                             ) : (
-                                <span className="material-symbols-outlined text-sm">save</span>
+                                <Save size={16} />
                             )}
                             {isSaving ? "Saving..." : "Save Settings"}
                         </button>

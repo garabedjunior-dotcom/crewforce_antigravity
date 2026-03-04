@@ -129,12 +129,12 @@ export default async function AnalyticsPage() {
                     <FadeIn delay={0.1}>
                         <div className="flex justify-between items-end mb-2">
                             <div>
-                                <h1 className="text-3xl font-black text-slate-900 dark:text-white">Analytics</h1>
+                                <h1 className="text-2xl font-semibold text-slate-900 dark:text-white">Analytics</h1>
                                 <p className="text-slate-500 mt-1">Overview of workforce operations, project performance, and activity trends.</p>
                             </div>
                             <div className="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-1.5 shadow-sm">
-                                <span className="material-symbols-outlined text-sm text-emerald-500">circle</span>
-                                <span className="text-xs font-bold text-slate-600 dark:text-slate-400">Live Data</span>
+                                <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Live Data</span>
                             </div>
                         </div>
                     </FadeIn>

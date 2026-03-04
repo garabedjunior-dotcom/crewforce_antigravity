@@ -5,6 +5,7 @@ import { Header } from "@/components/layout/header";
 import { ProjectRatesTable } from "@/components/projects/project-rates-table";
 import { ProjectPieceRatesTable } from "@/components/projects/project-piece-rates-table";
 import { Metadata } from "next";
+import { ChevronRight } from "lucide-react";
 
 export async function generateMetadata(props: { params: Promise<{ id: string }> }): Promise<Metadata> {
     const params = await props.params;
@@ -58,15 +59,15 @@ export default async function ProjectRatesPage(props: { params: Promise<{ id: st
                     {/* Breadcrumbs */}
                     <nav className="flex items-center gap-2 text-sm font-medium text-slate-500">
                         <Link href="/projects" className="hover:text-primary transition-colors">Projects</Link>
-                        <span className="material-symbols-outlined text-sm">chevron_right</span>
+                        <ChevronRight size={14} className="text-slate-400" />
                         <Link href={`/projects/${project.id}`} className="hover:text-primary transition-colors">{project.name}</Link>
-                        <span className="material-symbols-outlined text-sm">chevron_right</span>
+                        <ChevronRight size={14} className="text-slate-400" />
                         <span className="text-slate-900 dark:text-white">Team & Rates</span>
                     </nav>
 
                     <div className="flex justify-between items-end">
                         <div>
-                            <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Team & Rates</h1>
+                            <h1 className="text-2xl font-semibold text-slate-900 dark:text-white tracking-tight">Team & Rates</h1>
                             <p className="text-slate-500 mt-1 max-w-2xl">
                                 Override global pay rates for specific workers on this project.
                                 Set a custom hourly/daily rate, or add fixed allowances like Per Diem or Accommodation.

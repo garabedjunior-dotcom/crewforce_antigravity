@@ -1,6 +1,7 @@
 "use client";
 
 import { BarChart, DonutChart, Sparkline } from "./charts";
+import { Folder, PlayCircle, Users, FileText, Wallet, BarChart3, PieChart, Trophy, TrendingUp, type LucideIcon } from "lucide-react";
 
 interface AnalyticsData {
     // Summary stats
@@ -23,21 +24,21 @@ export function AnalyticsDashboard({ data }: { data: AnalyticsData }) {
         <div className="space-y-6">
             {/* KPI Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-                {[
-                    { label: "Total Projects", value: data.totalProjects.toString(), icon: "folder", color: "text-primary", bg: "bg-primary/10", trend: data.recentTrend },
-                    { label: "Active Projects", value: data.activeProjects.toString(), icon: "play_circle", color: "text-emerald-500", bg: "bg-emerald-500/10", trend: null },
-                    { label: "Total Workers", value: data.totalWorkers.toString(), icon: "groups", color: "text-blue-500", bg: "bg-blue-500/10", trend: null },
-                    { label: "Daily Logs", value: data.totalLogs.toString(), icon: "feed", color: "text-violet-500", bg: "bg-violet-500/10", trend: data.recentTrend },
-                    { label: "Total Budget", value: data.totalBudget > 0 ? `$${(data.totalBudget / 1000).toFixed(0)}k` : "$0", icon: "payments", color: "text-amber-500", bg: "bg-amber-500/10", trend: null },
-                ].map((card, i) => (
-                    <div key={i} className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm hover:-translate-y-0.5 transition-transform">
+                {([
+                    { label: "Total Projects", value: data.totalProjects.toString(), icon: Folder, color: "text-primary", trend: data.recentTrend },
+                    { label: "Active Projects", value: data.activeProjects.toString(), icon: PlayCircle, color: "text-emerald-500", trend: null },
+                    { label: "Total Workers", value: data.totalWorkers.toString(), icon: Users, color: "text-blue-500", trend: null },
+                    { label: "Daily Logs", value: data.totalLogs.toString(), icon: FileText, color: "text-violet-500", trend: data.recentTrend },
+                    { label: "Total Budget", value: data.totalBudget > 0 ? `$${(data.totalBudget / 1000).toFixed(0)}k` : "$0", icon: Wallet, color: "text-amber-500", trend: null },
+                ] as { label: string; value: string; icon: LucideIcon; color: string; trend: number[] | null }[]).map((card, i) => (
+                    <div key={i} className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-colors">
                         <div className="flex items-center justify-between mb-3">
-                            <p className="text-slate-500 text-[10px] font-bold uppercase tracking-wider">{card.label}</p>
-                            <div className={`size-9 rounded-lg ${card.bg} flex items-center justify-center`}>
-                                <span className={`material-symbols-outlined text-lg ${card.color}`}>{card.icon}</span>
+                            <p className="text-slate-500 text-[11px] font-medium uppercase tracking-wider">{card.label}</p>
+                            <div className="size-9 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                                <card.icon className={card.color} size={17} />
                             </div>
                         </div>
-                        <p className="text-3xl font-black text-slate-900 dark:text-white">{card.value}</p>
+                        <p className="text-2xl font-bold text-slate-900 dark:text-white">{card.value}</p>
                         {card.trend && card.trend.length > 1 && (
                             <div className="mt-2">
                                 <Sparkline data={card.trend} color={card.color.includes("primary") ? "#f97316" : "#8b5cf6"} height={30} />
@@ -53,10 +54,10 @@ export function AnalyticsDashboard({ data }: { data: AnalyticsData }) {
                 <div className="lg:col-span-2 bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
                     <div className="flex items-center justify-between mb-6">
                         <div>
-                            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Daily Log Activity</h3>
+                            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Daily Log Activity</h3>
                             <p className="text-xs text-slate-500">Logs submitted per day (last 7 days)</p>
                         </div>
-                        <span className="material-symbols-outlined text-slate-400">bar_chart</span>
+                        <BarChart3 className="text-slate-400" size={18} />
                     </div>
                     {data.logsByDay.length > 0 ? (
                         <BarChart data={data.logsByDay} height={180} />
@@ -69,10 +70,10 @@ export function AnalyticsDashboard({ data }: { data: AnalyticsData }) {
                 <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
                     <div className="flex items-center justify-between mb-6">
                         <div>
-                            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Project Status</h3>
+                            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Project Status</h3>
                             <p className="text-xs text-slate-500">Distribution by status</p>
                         </div>
-                        <span className="material-symbols-outlined text-slate-400">donut_small</span>
+                        <PieChart className="text-slate-400" size={18} />
                     </div>
                     <div className="flex flex-col items-center gap-4">
                         <DonutChart
@@ -98,10 +99,10 @@ export function AnalyticsDashboard({ data }: { data: AnalyticsData }) {
                 <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
                     <div className="flex items-center justify-between mb-6">
                         <div>
-                            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Logs per Project</h3>
+                            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Logs per Project</h3>
                             <p className="text-xs text-slate-500">Report volume by project</p>
                         </div>
-                        <span className="material-symbols-outlined text-slate-400">leaderboard</span>
+                        <Trophy className="text-slate-400" size={18} />
                     </div>
                     {data.logsByProject.length > 0 ? (
                         <div className="space-y-3">
@@ -135,10 +136,10 @@ export function AnalyticsDashboard({ data }: { data: AnalyticsData }) {
                 <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
                     <div className="flex items-center justify-between mb-6">
                         <div>
-                            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Worker Activity</h3>
+                            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">Worker Activity</h3>
                             <p className="text-xs text-slate-500">Most active team members</p>
                         </div>
-                        <span className="material-symbols-outlined text-slate-400">trending_up</span>
+                        <TrendingUp className="text-slate-400" size={18} />
                     </div>
                     {data.workerActivity.length > 0 ? (
                         <div className="space-y-3">
@@ -148,12 +149,12 @@ export function AnalyticsDashboard({ data }: { data: AnalyticsData }) {
                                         {i + 1}
                                     </div>
                                     <div className="flex-1 min-w-0">
-                                        <p className="text-sm font-bold text-slate-800 dark:text-white truncate">{worker.name}</p>
+                                        <p className="text-sm font-medium text-slate-800 dark:text-white truncate">{worker.name}</p>
                                         <p className="text-xs text-slate-500">Last active: {worker.lastActive}</p>
                                     </div>
                                     <div className="text-right shrink-0">
-                                        <p className="text-lg font-black text-primary">{worker.logs}</p>
-                                        <p className="text-[10px] text-slate-500 font-semibold uppercase">Logs</p>
+                                        <p className="text-lg font-bold text-primary">{worker.logs}</p>
+                                        <p className="text-[11px] text-slate-500 font-semibold uppercase">Logs</p>
                                     </div>
                                 </div>
                             ))}

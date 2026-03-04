@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { FadeIn } from "@/components/ui/fade-in";
 import { calculateWeeklyPayroll } from "@/lib/payroll-calculator";
 import { DownloadPayslipButton } from "@/components/payroll/download-payslip-button";
+import { Download, Wallet, Users, Clock, CreditCard } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
 
@@ -32,61 +33,61 @@ export default async function PayrollPage() {
 
                     <FadeIn delay={0.1} className="flex justify-between items-end">
                         <div>
-                            <h1 className="text-3xl font-black text-slate-900 dark:text-white">Payroll & Production</h1>
+                            <h1 className="text-2xl font-semibold text-slate-900 dark:text-white">Payroll & Production</h1>
                             <p className="text-slate-500 mt-1">Calculations based entirely on field Daily Logs via Telegram.</p>
                         </div>
                         <div className="flex gap-4">
                             <a
                                 href={`/api/export/csv?start=${startOfWeek.toISOString()}&end=${endOfWeek.toISOString()}`}
                                 download
-                                className="bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 px-6 py-2 rounded-lg font-bold shadow-sm hover:bg-slate-50 transition-colors flex items-center gap-2"
+                                className="bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 px-6 py-2 rounded-lg font-medium shadow-sm hover:bg-slate-50 transition-colors flex items-center gap-2"
                             >
-                                <span className="material-symbols-outlined text-sm">download</span>
+                                <Download size={16} />
                                 Export CSV
                             </a>
-                            <button className="bg-primary text-white px-6 py-2 rounded-lg font-bold shadow-sm hover:bg-primary/90 transition-colors flex items-center gap-2">
-                                <span className="material-symbols-outlined text-sm">payments</span>
+                            <button className="bg-primary text-white px-6 py-2 rounded-lg font-medium shadow-sm hover:bg-primary/90 transition-colors flex items-center gap-2">
+                                <CreditCard size={16} />
                                 Process Payments
                             </button>
                         </div>
                     </FadeIn>
 
                     <FadeIn delay={0.2} className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="bg-amber-50 dark:bg-amber-900/10 p-6 rounded-xl border border-amber-200 dark:border-amber-800/50 shadow-sm flex items-center justify-between">
+                        <div className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-colors flex items-center justify-between">
                             <div>
-                                <p className="text-amber-600 dark:text-amber-500 text-[10px] font-bold uppercase">Active Workers Logged</p>
-                                <p className="text-3xl font-bold text-amber-700 dark:text-amber-400 mt-1">{activeWorkers}</p>
+                                <p className="text-slate-500 text-[11px] font-medium uppercase">Active Workers Logged</p>
+                                <p className="text-2xl font-bold text-slate-900 dark:text-white mt-1">{activeWorkers}</p>
                             </div>
-                            <span className="material-symbols-outlined text-3xl text-amber-500/40">groups</span>
+                            <div className="size-9 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center"><Users className="text-slate-400" size={17} /></div>
                         </div>
-                        <div className="bg-emerald-50 dark:bg-emerald-900/10 p-6 rounded-xl border border-emerald-200 dark:border-emerald-800/50 shadow-sm flex items-center justify-between">
+                        <div className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-colors flex items-center justify-between">
                             <div>
-                                <p className="text-emerald-600 dark:text-emerald-500 text-[10px] font-bold uppercase">Estimated Period Payout</p>
-                                <p className="text-3xl font-bold text-emerald-700 dark:text-emerald-400 mt-1">
+                                <p className="text-slate-500 text-[11px] font-medium uppercase">Estimated Period Payout</p>
+                                <p className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
                                     ${totalEstimatedPayout.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                                 </p>
                             </div>
-                            <span className="material-symbols-outlined text-3xl text-emerald-500/40">account_balance</span>
+                            <div className="size-9 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center"><Wallet className="text-slate-400" size={17} /></div>
                         </div>
-                        <div className="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex items-center justify-between">
+                        <div className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-colors flex items-center justify-between">
                             <div>
-                                <p className="text-slate-500 text-[10px] font-bold uppercase">Total Hours Tracked</p>
-                                <p className="text-3xl font-bold mt-1">
+                                <p className="text-slate-500 text-[11px] font-medium uppercase">Total Hours Tracked</p>
+                                <p className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
                                     {totalHoursLogged.toFixed(1)}h
                                 </p>
                             </div>
-                            <span className="material-symbols-outlined text-3xl text-slate-400/40">schedule</span>
+                            <div className="size-9 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center"><Clock className="text-slate-400" size={17} /></div>
                         </div>
                     </FadeIn>
 
                     <FadeIn delay={0.3} className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col">
                         <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50">
-                            <h3 className="font-bold flex items-center gap-2"><span className="material-symbols-outlined text-primary">account_balance_wallet</span> Calculated Payouts</h3>
+                            <h3 className="font-semibold flex items-center gap-2"><Wallet className="text-primary" size={18} /> Calculated Payouts</h3>
                         </div>
                         <div className="overflow-x-auto">
                             <table className="w-full text-left border-collapse">
                                 <thead className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-700">
-                                    <tr className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">
+                                    <tr className="text-[11px] uppercase font-medium text-slate-500 tracking-wider">
                                         <th className="px-6 py-4 font-semibold">Worker</th>
                                         <th className="px-6 py-4 font-semibold">Crew</th>
                                         <th className="px-6 py-4 font-semibold text-center">Hours (Reg+OT)</th>
@@ -108,7 +109,7 @@ export default async function PayrollPage() {
                                         payrollResults.map((stat: import("@/lib/payroll-calculator").PayrollResult) => (
                                             <tr key={stat.workerId} className="text-sm hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors">
                                                 <td className="px-6 py-3 font-bold text-slate-900 dark:text-white flex items-center gap-3">
-                                                    <div className="size-8 rounded bg-primary/10 text-primary flex items-center justify-center font-bold text-xs uppercase shrink-0">
+                                                    <div className="size-8 rounded-lg bg-slate-100 dark:bg-slate-800 text-primary flex items-center justify-center font-bold text-xs uppercase shrink-0">
                                                         {stat.workerName?.substring(0, 2) || "??"}
                                                     </div>
                                                     {stat.workerName || "Unknown Worker"}
@@ -125,14 +126,14 @@ export default async function PayrollPage() {
                                                     ${stat.pieceEarnings.toFixed(2)}
                                                 </td>
                                                 <td className="px-6 py-3 text-center">
-                                                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider ${stat.minGuaranteeApplied
+                                                    <span className={`px-2 py-0.5 rounded text-[11px] font-medium uppercase tracking-wider ${stat.minGuaranteeApplied
                                                         ? 'bg-amber-100 text-amber-700'
                                                         : 'bg-emerald-100 text-emerald-700'
                                                         }`}>
                                                         {stat.paymentMethod}
                                                     </span>
                                                 </td>
-                                                <td className="px-6 py-3 text-right font-black text-emerald-600 dark:text-emerald-500 text-lg">
+                                                <td className="px-6 py-3 text-right font-bold text-slate-900 dark:text-white text-base">
                                                     ${stat.totalPay.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                                                 </td>
                                                 <td className="px-6 py-3 text-right">

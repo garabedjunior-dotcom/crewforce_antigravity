@@ -33,12 +33,12 @@ export default async function ProjectsPage() {
 
                     <FadeIn delay={0.1} className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4 mb-8">
                         <div>
-                            <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Active Operations</h1>
+                            <h1 className="text-2xl font-semibold text-slate-900 dark:text-white tracking-tight">Active Operations</h1>
                             <p className="text-slate-500 font-medium mt-1">Manage infrastructure deployments, track progress, and budgets.</p>
                         </div>
                         <Link
                             href="/projects/new"
-                            className="bg-primary hover:bg-primary/90 text-white px-6 py-2.5 rounded-xl font-bold shadow-lg shadow-primary/20 hover:shadow-primary/30 hover:-translate-y-0.5 transition-all flex items-center gap-2 shrink-0"
+                            className="bg-primary hover:bg-primary/90 text-white px-6 py-2.5 rounded-lg font-semibold transition-colors flex items-center gap-2 shrink-0"
                         >
                             <Plus size={18} strokeWidth={2.5} />
                             Deploy New Operation
@@ -54,17 +54,16 @@ export default async function ProjectsPage() {
                         ].map((stat, i) => {
                             const Icon = stat.icon;
                             return (
-                                <div key={i} className="group bg-white/70 dark:bg-white/5 backdrop-blur-xl p-5 rounded-3xl border border-white/40 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.1)] hover:-translate-y-1 hover:shadow-[0_12px_40px_rgb(0,0,0,0.08)] transition-all duration-300 relative overflow-hidden flex flex-col justify-between">
-                                    <div className="absolute top-0 right-0 p-16 bg-gradient-to-bl from-white/40 dark:from-white/5 to-transparent rounded-full -mr-10 -mt-10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                                <div key={i} className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-colors flex flex-col justify-between">
                                     <div className="flex items-center justify-between mb-4">
-                                        <p className="text-slate-500 text-[10px] font-bold uppercase tracking-wider">{stat.label}</p>
-                                        <div className={`size-10 rounded-xl ${stat.iconBg} flex items-center justify-center`}>
+                                        <p className="text-slate-500 text-[11px] font-medium uppercase tracking-wider">{stat.label}</p>
+                                        <div className="size-9 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
                                             <Icon className={stat.iconColor} size={18} strokeWidth={2.5} />
                                         </div>
                                     </div>
                                     <div className="flex items-end gap-2">
-                                        <h3 className="text-3xl font-black text-slate-900 dark:text-white drop-shadow-sm">{stat.value}</h3>
-                                        <span className={`text-slate-400 text-xs font-bold mb-1.5`}>{stat.sub}</span>
+                                        <h3 className="text-2xl font-bold text-slate-900 dark:text-white">{stat.value}</h3>
+                                        <span className={`text-slate-400 text-xs font-medium mb-1.5`}>{stat.sub}</span>
                                     </div>
                                 </div>
                             );
@@ -72,12 +71,11 @@ export default async function ProjectsPage() {
                     </FadeIn>
 
                     {projects.length === 0 ? (
-                        <div className="bg-white/50 dark:bg-white/5 border border-slate-200/50 dark:border-white/5 backdrop-blur-xl p-16 text-center rounded-3xl flex flex-col items-center shadow-[0_8px_30px_rgb(0,0,0,0.02)] relative overflow-hidden mt-8">
-                            <div className="absolute inset-0 bg-grid-slate-900/[0.04] dark:bg-grid-white/[0.02] bg-[size:32px_32px]"></div>
+                        <div className="bg-white dark:bg-slate-900 border border-dashed border-slate-200 dark:border-slate-700 p-16 text-center rounded-xl flex flex-col items-center mt-8">
                             <Construction className="text-slate-300 dark:text-slate-600 mb-4" size={56} strokeWidth={1} />
-                            <h4 className="text-slate-900 dark:text-white font-black text-xl z-10">No active operations</h4>
-                            <p className="text-slate-500 text-sm mt-2 max-w-sm z-10">Create your first infrastructure project to start deploying crews and tracking daily logs.</p>
-                            <Link href="/projects/new" className="mt-8 bg-primary text-white font-bold text-sm px-6 py-3 rounded-xl hover:bg-primary/90 hover:shadow-lg hover:shadow-primary/20 hover:-translate-y-0.5 transition-all inline-flex items-center gap-2 z-10">
+                            <h4 className="text-slate-900 dark:text-white font-semibold text-lg">No active operations</h4>
+                            <p className="text-slate-500 text-sm mt-2 max-w-sm">Create your first infrastructure project to start deploying crews and tracking daily logs.</p>
+                            <Link href="/projects/new" className="mt-8 bg-primary text-white font-semibold text-sm px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors inline-flex items-center gap-2">
                                 <Plus size={18} strokeWidth={2.5} />
                                 Initialize Project
                             </Link>
@@ -91,18 +89,17 @@ export default async function ProjectsPage() {
                                     <Link
                                         key={project.id}
                                         href={`/projects/${project.id}`}
-                                        className="group bg-white/70 dark:bg-white/5 backdrop-blur-xl rounded-3xl border border-white/50 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.03)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.08)] overflow-hidden hover:shadow-[0_12px_40px_rgba(255,102,0,0.08)] hover:border-primary/40 dark:hover:border-primary/30 transition-all duration-300 hover:-translate-y-1 flex flex-col"
+                                        className="group bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-colors overflow-hidden flex flex-col"
                                     >
                                         {/* Card Header */}
-                                        <div className="p-6 pb-5 flex-1 relative">
-                                            <div className="absolute top-0 right-0 p-12 bg-gradient-to-bl from-white/40 dark:from-white/5 to-transparent rounded-full -mr-8 -mt-8 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                                        <div className="p-5 flex-1">
                                             <div className="flex items-start justify-between mb-4">
                                                 <div className="flex items-center gap-4">
                                                     <div className={`size-12 rounded-2xl bg-gradient-to-br ${colors[colorIndex]} text-white flex items-center justify-center font-black text-xl uppercase shadow-lg shadow-black/10 shrink-0`}>
                                                         {project.name.substring(0, 2)}
                                                     </div>
                                                     <div className="min-w-0">
-                                                        <h3 className="font-bold text-slate-900 dark:text-white text-lg truncate group-hover:text-primary transition-colors">
+                                                        <h3 className="font-bold text-slate-900 dark:text-white text-lg truncate">
                                                             {project.name}
                                                         </h3>
                                                         {project.clientName && (
@@ -113,7 +110,7 @@ export default async function ProjectsPage() {
                                                         )}
                                                     </div>
                                                 </div>
-                                                <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider shrink-0 ${statusStyles[project.status] || "bg-slate-100 text-slate-600"}`}>
+                                                <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-semibold uppercase tracking-wider shrink-0 ${statusStyles[project.status] || "bg-slate-100 text-slate-600"}`}>
                                                     {project.status}
                                                 </span>
                                             </div>
@@ -131,7 +128,7 @@ export default async function ProjectsPage() {
                                         </div>
 
                                         {/* Card Footer */}
-                                        <div className="px-6 py-3 flex items-center justify-between bg-slate-50/50 dark:bg-slate-900/50 border-t border-slate-100/50 dark:border-white/5">
+                                        <div className="px-6 py-3 flex items-center justify-between bg-slate-50 dark:bg-slate-800 border-t border-slate-100 dark:border-slate-700">
                                             <div className="flex items-center gap-3 text-xs text-slate-500 font-bold">
                                                 <span className="flex items-center gap-1">
                                                     <Users size={14} className="text-slate-400" />
