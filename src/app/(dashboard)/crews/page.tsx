@@ -74,7 +74,7 @@ export default async function CrewsPage() {
 
                     <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
                         {/* Crews List */}
-                        <FadeIn delay={0.2} className="bg-white/70 dark:bg-white/5 backdrop-blur-xl rounded-3xl border border-white/50 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.03)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.08)] overflow-hidden flex flex-col h-[600px] relative">
+                        <FadeIn delay={0.2} className="min-w-0 bg-white/70 dark:bg-white/5 backdrop-blur-xl rounded-3xl border border-white/50 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.03)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.08)] overflow-hidden flex flex-col h-[600px] relative">
                             <div className="p-6 border-b border-slate-100/50 dark:border-white/5 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50">
                                 <h3 className="font-black text-xl flex items-center gap-2 text-slate-900 dark:text-white"><Users className="text-primary" size={24} strokeWidth={2.5} /> Field Crews</h3>
                             </div>
@@ -129,11 +129,11 @@ export default async function CrewsPage() {
                         </FadeIn>
 
                         {/* Workers List */}
-                        <FadeIn delay={0.25} className="bg-white/70 dark:bg-white/5 backdrop-blur-xl rounded-3xl border border-white/50 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.03)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.08)] overflow-hidden flex flex-col h-[600px] relative">
+                        <FadeIn delay={0.25} className="min-w-0 bg-white/70 dark:bg-white/5 backdrop-blur-xl rounded-3xl border border-white/50 dark:border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.03)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.08)] overflow-hidden flex flex-col h-[600px] relative">
                             <div className="p-6 border-b border-slate-100/50 dark:border-white/5 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50">
                                 <h3 className="font-black text-xl flex items-center gap-2 text-slate-900 dark:text-white"><BadgeInfo className="text-primary" size={24} strokeWidth={2.5} /> Personnel Directory</h3>
                             </div>
-                            <div className="flex-1 overflow-y-auto overflow-x-auto p-0 no-scrollbar relative w-full">
+                            <div className="flex-1 overflow-y-auto overflow-x-auto p-0 relative w-full">
                                 <WorkerDirectoryTable
                                     workers={workers.map(w => ({
                                         id: w.id,
