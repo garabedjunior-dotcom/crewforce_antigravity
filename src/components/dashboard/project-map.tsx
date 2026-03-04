@@ -101,17 +101,19 @@ export function ProjectMap({ projects }: ProjectMapProps) {
             .addAttribution('<a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a> | &copy; <a href="https://carto.com" target="_blank" rel="noopener">CARTO</a>')
             .addTo(map);
 
-        // Tile Layers
-        const lightUrl = "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
-        const darkUrl = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
+        // Light: Standard OpenStreetMap
+        const lightUrl = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+
+        // Dark: CartoDB Dark Matter (proper endpoint)
+        const darkUrl = "https://{s}.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}{r}.png";
 
         // Determine current theme (account for 'system')
         const currentTheme = theme === 'system' ? systemTheme : theme;
         const isDark = currentTheme === 'dark';
 
         const tileLayer = L.tileLayer(isDark ? darkUrl : lightUrl, {
-            maxZoom: 20,
-            subdomains: "abcd",
+            maxZoom: 19,
+            attribution: isDark ? '&copy; OpenStreetMap &copy; CARTO' : '&copy; OpenStreetMap'
         }).addTo(map);
 
         tileLayerRef.current = tileLayer;
@@ -148,8 +150,8 @@ export function ProjectMap({ projects }: ProjectMapProps) {
     // Watch for theme changes and update the tile layer URL without recreating the map
     useEffect(() => {
         if (!tileLayerRef.current) return;
-        const lightUrl = "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
-        const darkUrl = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
+        const lightUrl = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+        const darkUrl = "https://{s}.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}{r}.png";
         const currentTheme = theme === 'system' ? systemTheme : theme;
         const isDark = currentTheme === 'dark';
 
@@ -170,12 +172,17 @@ export function ProjectMap({ projects }: ProjectMapProps) {
                     width: 100% !important;
                     height: 100% !important;
                     z-index: 1 !important;
-                    background: #f8fafc !important;
+                    background: transparent !important;
                 }
 
                 /* ─── Dark Mode Background ─── */
                 .dark .leaflet-container {
-                    background: #0f172a !important;
+                    background: transparent !important;
+                }
+
+                /* Fix Leaflet Tile Images getting hidden by globals */
+                .leaflet-tile {
+                    filter: none !important;
                 }
 
                 /* Prevent markers/popups/controls from being inverted */
