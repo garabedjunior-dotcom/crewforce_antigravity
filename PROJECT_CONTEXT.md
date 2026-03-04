@@ -13,3 +13,8 @@
 ## Próximas Etapas e Restrições
 - Seguir estritamente o protocolo Docs-First.
 - Manter o padrão visual Glassmorphism estabelecido na UI.
+
+## Modificações Recentes & Tech Debt / Hand-Off
+- **UI Overflow / Grid Blowout**: Implementado sistema defensivo em elementos Flex/Grid (`min-w-0`, `min-h-0`, `shrink-0`) pelo painel para segurar responsividade. Em novas construções flex/grid complexas, lembrar previamente desta limitação de contêineres filhos.
+- **Form Validation & Server Actions**: Modificado tipagem restrita do Zod para aceitar Strings Vazias `""` provindas do frontend como `null` nativo, alocando a validação para o escopo interno das "Try/Catch Actions" para capturar exceções sem tela vermelha `500`.
+- Removidos CTA Buttons redundantes que quebravam a hierarquia da tela.

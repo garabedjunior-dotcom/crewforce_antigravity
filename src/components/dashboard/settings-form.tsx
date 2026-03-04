@@ -1,8 +1,8 @@
 "use client";
 
-import { updateCompanySettings, updateDefaultRates } from "@/app/actions/settings-actions";
-import { useState } from "react";
-import { Network, User, Wallet, Loader2, Check, Save, SlidersHorizontal, AlertTriangle, Download, RotateCcw, Database, Send, Shield, type LucideIcon } from "lucide-react";
+import { updateCompanySettings, updateDefaultRates, changePassword } from "@/app/actions/settings-actions";
+import { useState, useRef } from "react";
+import { Network, User, Wallet, Loader2, Check, Save, SlidersHorizontal, AlertTriangle, Download, RotateCcw, Database, Send, Shield, Lock, type LucideIcon } from "lucide-react";
 
 interface SettingsFormProps {
     admin: {
@@ -27,6 +27,8 @@ interface SettingsFormProps {
 export function SettingsForm({ admin, integrations, stats }: SettingsFormProps) {
     const [saving, setSaving] = useState<string | null>(null);
     const [saved, setSaved] = useState<string | null>(null);
+    const [passwordError, setPasswordError] = useState<string | null>(null);
+    const passwordFormRef = useRef<HTMLFormElement>(null);
 
     async function handleSave(formName: string, action: (formData: FormData) => Promise<void>, formData: FormData) {
         setSaving(formName);
@@ -138,6 +140,76 @@ export function SettingsForm({ admin, integrations, stats }: SettingsFormProps) 
                                 <><Check size={16} /> Saved!</>
                             ) : (
                                 <><Save size={16} /> Save Changes</>
+                            )}
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            {/* Change Password */}
+            <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+                <div className="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
+                    <h2 className="font-semibold text-lg flex items-center gap-2">
+                        <Lock className="text-primary" size={18} />
+                        Change Password
+                    </h2>
+                    <p className="text-sm text-slate-500 mt-1">Update your account password.</p>
+                </div>
+                <form
+                    ref={passwordFormRef}
+                    onSubmit={async (e) => {
+                        e.preventDefault();
+                        setSaving("password");
+                        setSaved(null);
+                        setPasswordError(null);
+                        const fd = new FormData(e.currentTarget);
+                        try {
+                            const result = await changePassword(fd);
+                            if (result.error) {
+                                setPasswordError(result.error);
+                            } else {
+                                setSaved("password");
+                                passwordFormRef.current?.reset();
+                                setTimeout(() => setSaved(null), 3000);
+                            }
+                        } finally {
+                            setSaving(null);
+                        }
+                    }}
+                    className="p-6 space-y-5"
+                >
+                    {passwordError && (
+                        <div className="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-sm text-red-700 dark:text-red-400 flex items-center gap-2">
+                            <AlertTriangle size={16} />
+                            {passwordError}
+                        </div>
+                    )}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                        <div className="space-y-1.5">
+                            <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">Current Password</label>
+                            <input name="currentPassword" type="password" required placeholder="Enter current password"
+                                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-3 text-sm font-medium focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" />
+                        </div>
+                        <div className="space-y-1.5">
+                            <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">New Password</label>
+                            <input name="newPassword" type="password" required minLength={6} placeholder="Min. 6 characters"
+                                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-3 text-sm font-medium focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" />
+                        </div>
+                        <div className="space-y-1.5">
+                            <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">Confirm New Password</label>
+                            <input name="confirmPassword" type="password" required minLength={6} placeholder="Re-enter new password"
+                                className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-3 text-sm font-medium focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all" />
+                        </div>
+                    </div>
+                    <div className="flex justify-end pt-2">
+                        <button type="submit" disabled={saving === "password"}
+                            className="px-6 py-2.5 rounded-lg font-medium text-sm bg-primary text-white hover:bg-primary/90 transition-colors flex items-center gap-2 disabled:opacity-50">
+                            {saving === "password" ? (
+                                <><Loader2 className="animate-spin" size={16} /> Updating...</>
+                            ) : saved === "password" ? (
+                                <><Check size={16} /> Updated!</>
+                            ) : (
+                                <><Lock size={16} /> Update Password</>
                             )}
                         </button>
                     </div>

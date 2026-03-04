@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
 import { requireAuth } from "@/lib/auth-guard";
 import { z } from "zod";
+import bcrypt from "bcryptjs";
 
 const companySettingsSchema = z.object({
     companyName: z.string().optional(),
@@ -72,4 +73,46 @@ export async function updateDefaultRates(formData: FormData) {
 
     revalidatePath("/settings");
     revalidatePath("/payroll");
+}
+
+const changePasswordSchema = z.object({
+    currentPassword: z.string().min(1, "Current password is required"),
+    newPassword: z.string().min(6, "New password must be at least 6 characters"),
+    confirmPassword: z.string().min(1, "Please confirm your new password"),
+}).refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+});
+
+export async function changePassword(formData: FormData): Promise<{ error?: string; success?: boolean }> {
+    const session = await requireAuth(["ADMIN"]);
+
+    const raw = {
+        currentPassword: formData.get("currentPassword") as string,
+        newPassword: formData.get("newPassword") as string,
+        confirmPassword: formData.get("confirmPassword") as string,
+    };
+
+    const result = changePasswordSchema.safeParse(raw);
+    if (!result.success) {
+        return { error: result.error.issues[0].message };
+    }
+
+    const admin = await prisma.user.findFirst({ where: { role: "ADMIN" } });
+    if (!admin || !admin.password) {
+        return { error: "User not found." };
+    }
+
+    const isValid = await bcrypt.compare(result.data.currentPassword, admin.password);
+    if (!isValid) {
+        return { error: "Current password is incorrect." };
+    }
+
+    const hashedPassword = await bcrypt.hash(result.data.newPassword, 10);
+    await prisma.user.update({
+        where: { id: admin.id },
+        data: { password: hashedPassword },
+    });
+
+    return { success: true };
 }
