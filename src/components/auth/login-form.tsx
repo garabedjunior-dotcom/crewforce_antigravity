@@ -1,17 +1,44 @@
 "use client";
 
-import { useActionState } from "react";
-import { authenticate } from "@/app/actions/auth-actions";
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import { Mail, Lock, ArrowRight, Loader2, AlertCircle } from "lucide-react";
 
 export function LoginForm() {
-    const [errorMessage, formAction, isPending] = useActionState(
-        authenticate,
-        undefined,
-    );
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [isPending, startTransition] = useTransition();
+    const router = useRouter();
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setErrorMessage(null);
+
+        const formData = new FormData(e.currentTarget);
+        const email = formData.get("email") as string;
+        const password = formData.get("password") as string;
+
+        startTransition(async () => {
+            const result = await signIn("credentials", {
+                email,
+                password,
+                redirect: false,
+            });
+
+            if (result?.error) {
+                // AuthError or general rejection
+                setErrorMessage("Invalid email or password.");
+            } else if (result?.ok) {
+                router.push("/");
+                router.refresh();
+            } else {
+                setErrorMessage("Something went wrong.");
+            }
+        });
+    };
 
     return (
-        <form action={formAction} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-4">
                 <div className="space-y-1.5">
                     <label className="text-xs font-medium text-slate-500 uppercase tracking-wider" htmlFor="email">
