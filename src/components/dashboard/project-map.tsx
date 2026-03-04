@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useTheme } from "next-themes";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -75,8 +76,10 @@ function createPopupHTML(project: ProjectPin) {
 }
 
 export function ProjectMap({ projects }: ProjectMapProps) {
+    const { theme, systemTheme } = useTheme();
     const mapRef = useRef<HTMLDivElement>(null);
     const mapInstanceRef = useRef<L.Map | null>(null);
+    const tileLayerRef = useRef<L.TileLayer | null>(null);
 
     useEffect(() => {
         if (!mapRef.current || mapInstanceRef.current) return;
@@ -98,12 +101,20 @@ export function ProjectMap({ projects }: ProjectMapProps) {
             .addAttribution('<a href="https://leafletjs.com" target="_blank" rel="noopener">Leaflet</a> | &copy; <a href="https://carto.com" target="_blank" rel="noopener">CARTO</a>')
             .addTo(map);
 
-        // CartoDB Voyager — clean, modern, premium tile layer
-        // Dark mode is handled via CSS filter on .leaflet-tile-pane
-        L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+        // Tile Layers
+        const lightUrl = "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
+        const darkUrl = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
+
+        // Determine current theme (account for 'system')
+        const currentTheme = theme === 'system' ? systemTheme : theme;
+        const isDark = currentTheme === 'dark';
+
+        const tileLayer = L.tileLayer(isDark ? darkUrl : lightUrl, {
             maxZoom: 20,
             subdomains: "abcd",
         }).addTo(map);
+
+        tileLayerRef.current = tileLayer;
 
         // Add markers
         projects.forEach((project) => {
@@ -130,8 +141,20 @@ export function ProjectMap({ projects }: ProjectMapProps) {
         return () => {
             map.remove();
             mapInstanceRef.current = null;
+            tileLayerRef.current = null;
         };
-    }, [projects]);
+    }, [projects]); // Re-run if projects change
+
+    // Watch for theme changes and update the tile layer URL without recreating the map
+    useEffect(() => {
+        if (!tileLayerRef.current) return;
+        const lightUrl = "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
+        const darkUrl = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
+        const currentTheme = theme === 'system' ? systemTheme : theme;
+        const isDark = currentTheme === 'dark';
+
+        tileLayerRef.current.setUrl(isDark ? darkUrl : lightUrl);
+    }, [theme, systemTheme]);
 
     return (
         <div className="relative w-full h-full min-h-[400px] flex-1 isolate z-0">
@@ -150,10 +173,7 @@ export function ProjectMap({ projects }: ProjectMapProps) {
                     background: #f8fafc !important;
                 }
 
-                /* ─── Dark Mode: invert tile layer only ─── */
-                .dark .leaflet-tile-pane {
-                    filter: invert(1) hue-rotate(180deg) brightness(0.92) contrast(1.1) saturate(0.3);
-                }
+                /* ─── Dark Mode Background ─── */
                 .dark .leaflet-container {
                     background: #0f172a !important;
                 }
