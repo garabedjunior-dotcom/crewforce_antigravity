@@ -54,16 +54,17 @@ export default async function ProjectsPage() {
                         ].map((stat, i) => {
                             const Icon = stat.icon;
                             return (
-                                <div key={i} className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-colors flex flex-col justify-between">
-                                    <div className="flex items-center justify-between mb-4">
-                                        <p className="text-slate-500 text-[11px] font-medium uppercase tracking-wider">{stat.label}</p>
-                                        <div className="size-9 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                                <div key={i} className="glass-card group p-5 hover:-translate-y-1 hover:shadow-glow hover:border-brand/40 transition-all duration-300 relative overflow-hidden flex flex-col justify-between">
+                                    <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                    <div className="relative flex items-center justify-between mb-4">
+                                        <p className="text-slate-500 dark:text-text-secondary text-[11px] font-medium uppercase tracking-wider">{stat.label}</p>
+                                        <div className="size-9 rounded-lg bg-slate-100 dark:bg-neutral-bg3 flex items-center justify-center">
                                             <Icon className={stat.iconColor} size={18} strokeWidth={2.5} />
                                         </div>
                                     </div>
-                                    <div className="flex items-end gap-2">
+                                    <div className="relative flex items-end gap-2">
                                         <h3 className="text-2xl font-bold text-slate-900 dark:text-white">{stat.value}</h3>
-                                        <span className={`text-slate-400 text-xs font-medium mb-1.5`}>{stat.sub}</span>
+                                        <span className={`text-slate-400 dark:text-text-muted text-xs font-medium mb-1.5`}>{stat.sub}</span>
                                     </div>
                                 </div>
                             );
@@ -71,11 +72,11 @@ export default async function ProjectsPage() {
                     </FadeIn>
 
                     {projects.length === 0 ? (
-                        <div className="bg-white dark:bg-slate-900 border border-dashed border-slate-200 dark:border-slate-700 p-16 text-center rounded-xl flex flex-col items-center mt-8">
+                        <div className="glass-card border-dashed p-16 text-center flex flex-col items-center mt-8">
                             <Construction className="text-slate-300 dark:text-slate-600 mb-4" size={56} strokeWidth={1} />
                             <h4 className="text-slate-900 dark:text-white font-semibold text-lg">No active operations</h4>
-                            <p className="text-slate-500 text-sm mt-2 max-w-sm">Create your first infrastructure project to start deploying crews and tracking daily logs.</p>
-                            <Link href="/projects/new" className="mt-8 bg-primary text-white font-semibold text-sm px-6 py-3 rounded-lg hover:bg-primary/90 transition-colors inline-flex items-center gap-2">
+                            <p className="text-slate-500 dark:text-text-secondary text-sm mt-2 max-w-sm">Create your first infrastructure project to start deploying crews and tracking daily logs.</p>
+                            <Link href="/projects/new" className="mt-8 bg-brand text-white font-semibold text-sm px-6 py-3 rounded-lg hover:bg-brand-hover transition-colors inline-flex items-center gap-2">
                                 <Plus size={18} strokeWidth={2.5} />
                                 Initialize Project
                             </Link>
@@ -89,17 +90,18 @@ export default async function ProjectsPage() {
                                     <Link
                                         key={project.id}
                                         href={`/projects/${project.id}`}
-                                        className="group bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-colors overflow-hidden flex flex-col"
+                                        className="group glass-card hover:-translate-y-1 hover:shadow-glow hover:border-brand/40 transition-all duration-300 relative overflow-hidden flex flex-col"
                                     >
+                                        <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                                         {/* Card Header */}
-                                        <div className="p-5 flex-1">
+                                        <div className="relative p-5 flex-1">
                                             <div className="flex items-start justify-between mb-4">
-                                                <div className="flex items-center gap-4">
+                                                <div className="flex items-center gap-4 min-w-0 pr-2">
                                                     <div className={`size-12 rounded-2xl bg-gradient-to-br ${colors[colorIndex]} text-white flex items-center justify-center font-black text-xl uppercase shadow-lg shadow-black/10 shrink-0`}>
                                                         {project.name.substring(0, 2)}
                                                     </div>
                                                     <div className="min-w-0">
-                                                        <h3 className="font-bold text-slate-900 dark:text-white text-lg truncate">
+                                                        <h3 className="font-bold text-slate-900 dark:text-text-primary group-hover:text-brand transition-colors text-lg truncate">
                                                             {project.name}
                                                         </h3>
                                                         {project.clientName && (
@@ -116,20 +118,20 @@ export default async function ProjectsPage() {
                                             </div>
 
                                             {project.location && (
-                                                <p className="text-xs font-medium text-slate-500 flex items-center gap-1 mb-2 bg-slate-50 dark:bg-slate-800/50 inline-flex px-2 py-1 rounded-md border border-slate-100 dark:border-slate-800/80">
-                                                    <MapPin size={12} className="text-slate-400" />
+                                                <p className="text-xs font-medium text-slate-500 dark:text-text-muted flex items-center gap-1 mb-2 bg-slate-50 dark:bg-neutral-bg3 inline-flex px-2 py-1 rounded-md border border-slate-100 dark:border-border-default shadow-sm">
+                                                    <MapPin size={12} className="text-slate-400 group-hover:text-brand transition-colors" />
                                                     {project.location}
                                                 </p>
                                             )}
 
                                             {project.description && (
-                                                <p className="text-sm text-slate-500 line-clamp-2 mt-3 font-medium leading-relaxed">{project.description}</p>
+                                                <p className="text-sm text-slate-500 dark:text-text-secondary line-clamp-2 mt-3 font-medium leading-relaxed">{project.description}</p>
                                             )}
                                         </div>
 
                                         {/* Card Footer */}
-                                        <div className="px-6 py-3 flex items-center justify-between bg-slate-50 dark:bg-slate-800 border-t border-slate-100 dark:border-slate-700">
-                                            <div className="flex items-center gap-3 text-xs text-slate-500 font-bold">
+                                        <div className="relative px-6 py-3 flex items-center justify-between bg-slate-50 dark:bg-neutral-bg3 border-t border-slate-100 dark:border-border-default">
+                                            <div className="flex items-center gap-3 text-xs text-slate-500 dark:text-text-muted font-bold">
                                                 <span className="flex items-center gap-1">
                                                     <Users size={14} className="text-slate-400" />
                                                     {project.crews.length} <span className="hidden sm:inline">Crew{project.crews.length !== 1 ? 's' : ''}</span>

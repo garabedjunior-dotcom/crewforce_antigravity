@@ -40,12 +40,12 @@ export default async function PayrollPage() {
                             <a
                                 href={`/api/export/csv?start=${startOfWeek.toISOString()}&end=${endOfWeek.toISOString()}`}
                                 download
-                                className="bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 px-6 py-2 rounded-lg font-medium shadow-sm hover:bg-slate-50 transition-colors flex items-center gap-2"
+                                className="glass-card text-slate-700 dark:text-slate-300 px-6 py-2 rounded-lg font-medium shadow-sm hover:bg-slate-50 dark:hover:bg-white/5 transition-colors flex items-center gap-2"
                             >
                                 <Download size={16} />
                                 Export CSV
                             </a>
-                            <button className="bg-primary text-white px-6 py-2 rounded-lg font-medium shadow-sm hover:bg-primary/90 transition-colors flex items-center gap-2">
+                            <button className="bg-brand text-white px-6 py-2 rounded-lg font-medium shadow-sm hover:bg-brand-hover transition-colors flex items-center gap-2">
                                 <CreditCard size={16} />
                                 Process Payments
                             </button>
@@ -53,40 +53,43 @@ export default async function PayrollPage() {
                     </FadeIn>
 
                     <FadeIn delay={0.2} className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <div className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-colors flex items-center justify-between">
-                            <div>
-                                <p className="text-slate-500 text-[11px] font-medium uppercase">Active Workers Logged</p>
+                        <div className="glass-card group hover:-translate-y-1 hover:shadow-glow hover:border-brand/40 p-5 transition-all duration-300 relative overflow-hidden flex items-center justify-between">
+                            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            <div className="relative">
+                                <p className="text-slate-500 dark:text-text-secondary text-[11px] font-medium uppercase">Active Workers Logged</p>
                                 <p className="text-2xl font-bold text-slate-900 dark:text-white mt-1">{activeWorkers}</p>
                             </div>
-                            <div className="size-9 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center"><Users className="text-slate-400" size={17} /></div>
+                            <div className="relative size-9 rounded-lg bg-slate-100 dark:bg-neutral-bg3 flex items-center justify-center"><Users className="text-slate-400 group-hover:text-brand transition-colors" size={17} /></div>
                         </div>
-                        <div className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-colors flex items-center justify-between">
-                            <div>
-                                <p className="text-slate-500 text-[11px] font-medium uppercase">Estimated Period Payout</p>
+                        <div className="glass-card group hover:-translate-y-1 hover:shadow-glow hover:border-brand/40 p-5 transition-all duration-300 relative overflow-hidden flex items-center justify-between">
+                            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            <div className="relative">
+                                <p className="text-slate-500 dark:text-text-secondary text-[11px] font-medium uppercase">Estimated Period Payout</p>
                                 <p className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
                                     ${totalEstimatedPayout.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                                 </p>
                             </div>
-                            <div className="size-9 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center"><Wallet className="text-slate-400" size={17} /></div>
+                            <div className="relative size-9 rounded-lg bg-slate-100 dark:bg-neutral-bg3 flex items-center justify-center"><Wallet className="text-slate-400 group-hover:text-brand transition-colors" size={17} /></div>
                         </div>
-                        <div className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-colors flex items-center justify-between">
-                            <div>
-                                <p className="text-slate-500 text-[11px] font-medium uppercase">Total Hours Tracked</p>
+                        <div className="glass-card group hover:-translate-y-1 hover:shadow-glow hover:border-brand/40 p-5 transition-all duration-300 relative overflow-hidden flex items-center justify-between">
+                            <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            <div className="relative">
+                                <p className="text-slate-500 dark:text-text-secondary text-[11px] font-medium uppercase">Total Hours Tracked</p>
                                 <p className="text-2xl font-bold text-slate-900 dark:text-white mt-1">
                                     {totalHoursLogged.toFixed(1)}h
                                 </p>
                             </div>
-                            <div className="size-9 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center"><Clock className="text-slate-400" size={17} /></div>
+                            <div className="relative size-9 rounded-lg bg-slate-100 dark:bg-neutral-bg3 flex items-center justify-center"><Clock className="text-slate-400 group-hover:text-brand transition-colors" size={17} /></div>
                         </div>
                     </FadeIn>
 
-                    <FadeIn delay={0.3} className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col">
-                        <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50">
-                            <h3 className="font-semibold flex items-center gap-2"><Wallet className="text-primary" size={18} /> Calculated Payouts</h3>
+                    <FadeIn delay={0.3} className="glass-card flex flex-col mb-10 overflow-hidden">
+                        <div className="p-4 border-b border-slate-100 dark:border-border-default flex justify-between items-center bg-slate-50/50 dark:bg-white/5">
+                            <h3 className="font-semibold text-slate-900 dark:text-text-primary flex items-center gap-2"><Wallet className="text-brand" size={18} /> Calculated Payouts</h3>
                         </div>
                         <div className="overflow-x-auto">
                             <table className="w-full text-left border-collapse">
-                                <thead className="bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-700">
+                                <thead className="bg-slate-50 dark:bg-white/5 border-b border-slate-200 dark:border-border-default">
                                     <tr className="text-[11px] uppercase font-medium text-slate-500 tracking-wider">
                                         <th className="px-6 py-4 font-semibold">Worker</th>
                                         <th className="px-6 py-4 font-semibold">Crew</th>
@@ -98,7 +101,7 @@ export default async function PayrollPage() {
                                         <th className="px-6 py-4 font-semibold text-right">Action</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                                <tbody className="divide-y divide-slate-100 dark:divide-white/5">
                                     {payrollResults.length === 0 ? (
                                         <tr>
                                             <td colSpan={8} className="text-center py-12 text-slate-500">
@@ -107,9 +110,9 @@ export default async function PayrollPage() {
                                         </tr>
                                     ) : (
                                         payrollResults.map((stat: import("@/lib/payroll-calculator").PayrollResult) => (
-                                            <tr key={stat.workerId} className="text-sm hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors">
+                                            <tr key={stat.workerId} className="text-sm hover:bg-slate-50/50 dark:hover:bg-white/5 transition-colors">
                                                 <td className="px-6 py-3 font-bold text-slate-900 dark:text-white flex items-center gap-3">
-                                                    <div className="size-8 rounded-lg bg-slate-100 dark:bg-slate-800 text-primary flex items-center justify-center font-bold text-xs uppercase shrink-0">
+                                                    <div className="size-8 rounded-lg bg-slate-100 dark:bg-neutral-bg3 text-brand flex items-center justify-center font-bold text-xs uppercase shrink-0">
                                                         {stat.workerName?.substring(0, 2) || "??"}
                                                     </div>
                                                     {stat.workerName || "Unknown Worker"}

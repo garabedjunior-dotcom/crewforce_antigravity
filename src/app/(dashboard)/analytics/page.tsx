@@ -132,9 +132,9 @@ export default async function AnalyticsPage() {
                                 <h1 className="text-2xl font-semibold text-slate-900 dark:text-white">Analytics</h1>
                                 <p className="text-slate-500 mt-1">Overview of workforce operations, project performance, and activity trends.</p>
                             </div>
-                            <div className="flex items-center gap-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-1.5 shadow-sm">
-                                <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-                                <span className="text-xs font-medium text-slate-600 dark:text-slate-400">Live Data</span>
+                            <div className="flex items-center gap-2 glass-card rounded-lg px-3 py-1.5 shadow-sm border-slate-200 dark:border-border-default">
+                                <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"></span>
+                                <span className="text-xs font-medium text-slate-600 dark:text-text-secondary">Live Data</span>
                             </div>
                         </div>
                     </FadeIn>

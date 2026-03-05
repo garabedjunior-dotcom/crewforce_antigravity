@@ -70,13 +70,13 @@ export default async function ProjectDetailsPage(props: { params: Promise<{ id: 
                                     <h1 className="text-3xl font-semibold text-slate-900 dark:text-white">{project.name}</h1>
                                     <p className="text-slate-500 mt-1">{project.location || "Location not specified."}</p>
                                 </div>
-                                <div className="flex gap-3">
-                                    <Link href={`/projects/${project.id}/rates`} className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-md text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 px-6 py-2 rounded-lg font-medium shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700/80 transition-colors flex items-center gap-2">
+                                <div className="flex flex-wrap gap-3">
+                                    <Link href={`/projects/${project.id}/rates`} className="glass-card text-slate-700 dark:text-text-primary px-6 py-2 rounded-lg font-medium shadow-sm hover:bg-slate-50 dark:hover:bg-white/10 hover:border-brand/30 transition-all flex items-center gap-2">
                                         <Wallet size={16} />
                                         Team & Rates
                                     </Link>
                                     <EditProjectModal project={project} />
-                                    <button className="bg-primary text-white px-6 py-2 rounded-lg font-medium shadow-sm hover:bg-primary/90 transition-colors">Review {project.dailyLogs.length} Logs</button>
+                                    <button className="bg-brand text-white px-6 py-2 rounded-lg font-medium shadow-sm hover:bg-brand-hover transition-colors">Review {project.dailyLogs.length} Logs</button>
                                 </div>
                             </div>
 
@@ -89,33 +89,34 @@ export default async function ProjectDetailsPage(props: { params: Promise<{ id: 
                                 ].map((card, i) => {
                                     const CardIcon = card.icon;
                                     return (
-                                    <div key={i} className="bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-colors">
-                                        <div className="flex items-center justify-between mb-2">
-                                            <p className="text-slate-500 text-[11px] font-medium uppercase">{card.label}</p>
-                                            <CardIcon className="text-primary" size={20} />
+                                        <div key={i} className="glass-card group p-5 hover:-translate-y-1 hover:shadow-glow hover:border-brand/40 transition-all duration-300 relative overflow-hidden">
+                                            <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                            <div className="relative flex items-center justify-between mb-2">
+                                                <p className="text-slate-500 dark:text-text-secondary text-[11px] font-medium uppercase tracking-wider">{card.label}</p>
+                                                <CardIcon className="text-brand" size={20} />
+                                            </div>
+                                            <p className="relative text-2xl font-bold dark:text-white">{card.val} <span className="text-sm font-normal text-slate-400 dark:text-text-muted">{card.sub}</span></p>
+                                            <p className="relative text-emerald-600 dark:text-emerald-400 text-xs font-medium mt-1">{card.trend}</p>
                                         </div>
-                                        <p className="text-2xl font-bold">{card.val} <span className="text-sm font-normal text-slate-400">{card.sub}</span></p>
-                                        <p className="text-emerald-600 text-xs font-medium mt-1">{card.trend}</p>
-                                    </div>
                                     );
                                 })}
                             </div>
 
 
-                            <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-6 shadow-sm">
-                                <h2 className="text-lg font-semibold mb-6 flex items-center gap-2">
-                                    <FileText className="text-primary" size={18} />
+                            <div className="glass-card p-6 border-slate-200 dark:border-border-default shadow-sm">
+                                <h2 className="text-lg text-slate-900 dark:text-white font-semibold mb-6 flex items-center gap-2">
+                                    <FileText className="text-brand" size={18} />
                                     Recent Daily Logs
                                 </h2>
                                 {project.dailyLogs.length === 0 ? (
-                                    <div className="text-center py-12 text-slate-500 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-dashed border-slate-200 dark:border-slate-700">
+                                    <div className="text-center py-12 text-slate-500 dark:text-text-muted bg-slate-50 dark:bg-white/5 rounded-lg border border-dashed border-slate-200 dark:border-border-strong">
                                         No logs submitted yet via Telegram.
                                     </div>
                                 ) : (
                                     <div className="space-y-6">
                                         {project.dailyLogs.map((log: { id: string, description: string, dateReported: Date, imageUrls: string[], worker: { name: string | null } }) => (
-                                            <div key={log.id} className="border-l-2 border-primary/30 pl-4 py-2 relative">
-                                                <div className="absolute w-3 h-3 bg-primary rounded-full -left-[7px] top-3"></div>
+                                            <div key={log.id} className="border-l-2 border-brand/30 pl-4 py-2 relative">
+                                                <div className="absolute w-3 h-3 bg-brand shadow-[0_0_8px_rgba(255,102,0,0.6)] rounded-full -left-[7px] top-3"></div>
                                                 <div className="flex justify-between items-start mb-1">
                                                     <div>
                                                         <span className="font-bold text-slate-900 dark:text-white">{log.worker?.name || "Unknown Worker"}</span>
@@ -142,8 +143,8 @@ export default async function ProjectDetailsPage(props: { params: Promise<{ id: 
                         </FadeIn>
 
                         <FadeIn delay={0.3} direction="left" className="col-span-12 lg:col-span-4 flex flex-col gap-6">
-                            <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col h-[400px]">
-                                <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center relative z-10 bg-white dark:bg-slate-900">
+                            <div className="glass-card shadow-sm overflow-hidden flex flex-col h-[400px]">
+                                <div className="p-4 border-b border-slate-100 dark:border-border-default flex justify-between items-center relative z-10 bg-white/50 dark:bg-transparent backdrop-blur-md">
                                     <h3 className="font-semibold">Project Schematic</h3>
                                     {project.latitude && project.longitude && (
                                         <Link href="/map" className="text-slate-400 hover:text-slate-600 transition-colors"><Maximize2 size={16} /></Link>
@@ -175,16 +176,16 @@ export default async function ProjectDetailsPage(props: { params: Promise<{ id: 
                                 </div>
                             </div>
 
-                            <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-5 shadow-sm">
-                                <h3 className="font-semibold mb-4">Active Crews</h3>
+                            <div className="glass-card p-5 shadow-sm border-slate-200 dark:border-border-default">
+                                <h3 className="font-semibold text-slate-900 dark:text-white mb-4">Active Crews</h3>
                                 {project.crews.length === 0 ? (
-                                    <div className="text-sm text-slate-500 text-center py-4">No active crews assigned.</div>
+                                    <div className="text-sm text-slate-500 dark:text-text-secondary text-center py-4">No active crews assigned.</div>
                                 ) : (
                                     <div className="space-y-3">
                                         {project.crews.map((crew: { id: string, name: string, description: string | null }) => (
-                                            <div key={crew.id} className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 cursor-pointer hover:border-primary/30 transition-colors">
+                                            <div key={crew.id} className="flex items-center justify-between p-3 rounded-lg bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5 cursor-pointer hover:border-brand/30 dark:hover:border-brand/30 hover:shadow-glow transition-all">
                                                 <div className="flex items-center gap-3">
-                                                    <div className="size-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs uppercase">
+                                                    <div className="size-10 rounded-lg bg-brand-subtle text-brand border border-brand/20 flex items-center justify-center font-bold text-xs uppercase shadow-sm">
                                                         {crew.name.substring(0, 2)}
                                                     </div>
                                                     <div>

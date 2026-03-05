@@ -55,10 +55,10 @@ export function WorkerDirectoryTable({ workers, crews }: WorkerDirectoryTablePro
     return (
         <>
             {/* Header with search and filter */}
-            <div className="p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
+            <div className="p-6 border-b border-slate-100 dark:border-border-strong bg-slate-50/50 dark:bg-white/5">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
-                    <h3 className="font-semibold text-lg flex items-center gap-2 text-slate-900 dark:text-white">
-                        <BadgeInfo className="text-primary" size={24} strokeWidth={2.5} /> Personnel Directory
+                    <h3 className="font-semibold text-lg flex items-center gap-2 text-slate-900 dark:text-text-primary">
+                        <BadgeInfo className="text-brand" size={24} strokeWidth={2.5} /> Personnel Directory
                     </h3>
                     <span className="text-[11px] font-medium uppercase tracking-wider text-slate-400">
                         {filteredWorkers.length} of {workers.length} workers
@@ -72,10 +72,10 @@ export function WorkerDirectoryTable({ workers, crews }: WorkerDirectoryTablePro
                             placeholder="Search by name, role, or title..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-10 pr-9 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-medium text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 placeholder:text-slate-400 transition-colors"
+                            className="w-full pl-10 pr-9 py-2.5 glass-input rounded-lg text-sm font-medium text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand/20 placeholder:text-slate-400 transition-colors"
                         />
                         {searchQuery && (
-                            <button onClick={() => setSearchQuery("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+                            <button onClick={() => setSearchQuery("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-text-primary">
                                 <X size={14} />
                             </button>
                         )}
@@ -83,11 +83,11 @@ export function WorkerDirectoryTable({ workers, crews }: WorkerDirectoryTablePro
                     <select
                         value={crewFilter}
                         onChange={(e) => setCrewFilter(e.target.value)}
-                        className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2.5 text-sm font-medium text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/40 transition-colors sm:w-48"
+                        className="glass-input rounded-lg px-3 py-2.5 text-sm font-medium text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand/20 transition-colors sm:w-48 appearance-none"
                     >
-                        <option value="all">All Crews</option>
-                        <option value="unassigned">Unassigned</option>
-                        {crews.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                        <option value="all" className="dark:bg-neutral-bg3">All Crews</option>
+                        <option value="unassigned" className="dark:bg-neutral-bg3">Unassigned</option>
+                        {crews.map(c => <option key={c.id} value={c.id} className="dark:bg-neutral-bg3">{c.name}</option>)}
                     </select>
                 </div>
             </div>
@@ -95,7 +95,7 @@ export function WorkerDirectoryTable({ workers, crews }: WorkerDirectoryTablePro
             {/* Table */}
             <div className="w-full overflow-x-auto">
                 <table className="w-full text-left border-collapse">
-                    <thead className="bg-slate-50 dark:bg-slate-800 sticky top-0 z-10 border-b border-slate-200 dark:border-slate-700">
+                    <thead className="bg-slate-50 dark:bg-neutral-bg3 sticky top-0 z-10 border-b border-slate-200 dark:border-border-default">
                         <tr className="text-[11px] uppercase font-medium text-slate-500 tracking-wider">
                             <th className="px-6 py-4 w-[30%]">Name</th>
                             <th className="px-6 py-4 w-[25%]">Role</th>
@@ -104,7 +104,7 @@ export function WorkerDirectoryTable({ workers, crews }: WorkerDirectoryTablePro
                             <th className="px-6 py-4 text-right w-[15%]">Actions</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
+                    <tbody className="divide-y divide-slate-100 dark:divide-white/5">
                         {workers.length === 0 ? (
                             <tr>
                                 <td colSpan={5} className="text-center py-12 text-slate-500 font-medium">No personnel registered yet.</td>
@@ -121,25 +121,25 @@ export function WorkerDirectoryTable({ workers, crews }: WorkerDirectoryTablePro
                             </tr>
                         ) : (
                             filteredWorkers.map((worker) => (
-                                <tr key={worker.id} className="text-sm hover:bg-slate-50/50 dark:hover:bg-slate-800/30 transition-colors group cursor-default">
+                                <tr key={worker.id} className="text-sm hover:bg-slate-50/50 dark:hover:bg-white/5 transition-colors group cursor-default">
                                     <td className="px-6 py-3.5">
                                         <div className="flex items-center gap-3">
-                                            <div className="size-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold text-xs uppercase shrink-0">
+                                            <div className="size-8 rounded-lg bg-brand-subtle text-brand flex items-center justify-center font-bold text-xs uppercase shrink-0 border border-brand/20">
                                                 {(worker.name || "??").substring(0, 2)}
                                             </div>
-                                            <span className="font-medium text-slate-900 dark:text-white truncate">
+                                            <span className="font-medium text-slate-900 dark:text-text-primary truncate">
                                                 {worker.name || "Unnamed"}
                                             </span>
                                         </div>
                                     </td>
                                     <td className="px-6 py-3.5">
                                         <div className="flex flex-col">
-                                            <span className="text-slate-900 dark:text-white text-sm font-medium">{worker.jobTitle || "Not Specified"}</span>
-                                            <span className="text-slate-500 text-[11px] font-medium uppercase tracking-wider">{worker.role}</span>
+                                            <span className="text-slate-900 dark:text-text-primary text-sm font-medium">{worker.jobTitle || "Not Specified"}</span>
+                                            <span className="text-slate-500 dark:text-text-muted text-[11px] font-medium uppercase tracking-wider">{worker.role}</span>
                                         </div>
                                     </td>
                                     <td className="px-6 py-3.5">
-                                        <span className="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 px-2.5 py-1 rounded-md text-[11px] font-medium uppercase truncate max-w-[120px] inline-block border border-slate-200 dark:border-slate-700">
+                                        <span className="glass-card text-slate-600 dark:text-text-secondary px-2.5 py-1 rounded-md text-[11px] font-medium uppercase truncate max-w-[120px] inline-block shadow-sm">
                                             {worker.crew?.name || "Unassigned"}
                                         </span>
                                     </td>
@@ -157,7 +157,7 @@ export function WorkerDirectoryTable({ workers, crews }: WorkerDirectoryTablePro
                                     <td className="px-6 py-3.5 text-right">
                                         <button
                                             onClick={() => setSelectedWorker(worker)}
-                                            className="text-[11px] font-medium uppercase tracking-wider px-3.5 py-2 bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-300 hover:bg-primary hover:text-white dark:hover:bg-primary dark:hover:text-white rounded-lg transition-colors border border-slate-200 dark:border-slate-700 hover:border-primary dark:hover:border-primary flex items-center gap-1.5 ml-auto"
+                                            className="text-[11px] font-medium uppercase tracking-wider px-3.5 py-2 glass-card hover:bg-brand hover:text-white dark:hover:bg-brand dark:hover:text-white hover:border-brand/40 dark:hover:border-brand/40 transition-colors flex items-center gap-1.5 ml-auto"
                                         >
                                             <Settings2 size={12} strokeWidth={3} />
                                             Settings
