@@ -3,34 +3,89 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-primary: #ff6600;
-  --color-background-light: #f8f7f5;
-  --color-background-dark: #020617;
+  /* Brand colors - Adapted for CrewForce Orange */
+  --color-brand: #ff6600;
+  --color-brand-hover: #ff8533;
+  --color-brand-light: #ffa366;
+  --color-brand-subtle: rgba(255, 102, 0, 0.15);
 
+  /* Neutral backgrounds for immersive dark mode */
+  --color-neutral-bg1: hsl(240, 6%, 10%);
+  --color-neutral-bg2: hsl(240, 5%, 12%);
+  --color-neutral-bg3: hsl(240, 5%, 14%);
+  --color-neutral-bg4: hsl(240, 4%, 18%);
+  --color-neutral-bg5: hsl(240, 4%, 22%);
+  --color-neutral-bg6: hsl(240, 4%, 26%);
+
+  /* Text colors */
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #A1A1AA;
+  --color-text-muted: #71717A;
+
+  /* Border colors */
+  --color-border-subtle: hsla(0, 0%, 100%, 0.08);
+  --color-border-default: hsla(0, 0%, 100%, 0.12);
+  --color-border-strong: hsla(0, 0%, 100%, 0.20);
+
+  /* Override Tailwind defaults inside theme based on our tokens */
+  --color-background: var(--color-background-light);
+  --color-foreground: #0f172a;
+
+  /* Fonts */
   --font-display: "Inter", "Public Sans", sans-serif;
   --font-sans: "Inter", "Public Sans", sans-serif;
+  
+  --animate-fade-in: fadeIn 0.3s ease-out;
+  --animate-slide-up: slideUp 0.3s ease-out;
+  
+  @keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  
+  @keyframes slideUp {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes shimmer {
+    100% { transform: translateX(100%); }
+  }
+}
+
+/* Base styles and variables dependent on light/dark mode */
+:root {
+  --color-background-light: #f8f7f5;
+  --color-background-dark: hsl(240, 6%, 10%);
+  
+  --background: var(--color-background-light);
+  --foreground: #0f172a;
+}
+
+.dark {
+  --background: var(--color-background-dark);
+  --foreground: #f1f5f9;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  @apply antialiased;
 }
 
 @layer utilities {
   .active-nav {
-    background-color: rgba(255, 102, 0, 0.1);
-    color: #ff6600;
+    background-color: var(--color-brand-subtle);
+    color: var(--color-brand);
   }
 
-  /* Hide scrollbars but keep functionality */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
-
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
-  }
-
-  @keyframes shimmer {
-    100% {
-      transform: translateX(100%);
-    }
   }
 
   .skeleton-shimmer {
@@ -48,20 +103,25 @@
   }
 }
 
-:root {
-  --background: var(--color-background-light);
-  --foreground: #0f172a;
-  /* slate-900 */
-}
+@layer components {
+  /* Glassmorphism utilities */
+  .glass {
+    @apply backdrop-blur-md bg-white/5 border border-white/10 dark:border-border-subtle;
+  }
 
-.dark {
-  --background: var(--color-background-dark);
-  --foreground: #f1f5f9;
-  /* slate-100 */
-}
+  .glass-card {
+    @apply backdrop-blur-md bg-white/5 border border-white/10 dark:border-border-subtle rounded-xl shadow-sm dark:shadow-md;
+  }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
+  .glass-panel {
+    @apply backdrop-blur-lg bg-black/40 border border-white/5 dark:bg-neutral-bg2/80;
+  }
+
+  .glass-overlay {
+    @apply backdrop-blur-sm bg-black/60;
+  }
+
+  .glass-input {
+    @apply backdrop-blur-sm bg-white/5 border border-white/10 focus:border-brand focus:bg-white/10 dark:bg-neutral-bg3 dark:border-border-default;
+  }
 }

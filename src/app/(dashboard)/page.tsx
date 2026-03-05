@@ -52,14 +52,15 @@ export default async function DashboardPage() {
                         ].map((card, i) => {
                             const Icon = card.icon;
                             return (
-                                <div key={i} className="group bg-white dark:bg-slate-900 p-5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-colors">
-                                    <div className="flex items-center justify-between mb-4">
-                                        <p className="text-slate-500 text-[11px] font-medium uppercase tracking-wider">{card.label}</p>
-                                        <div className="size-9 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+                                <div key={i} className="group glass-card p-5 hover:-translate-y-1 hover:shadow-glow hover:border-brand/40 transition-all duration-300 relative overflow-hidden">
+                                    <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                    <div className="relative flex items-center justify-between mb-4">
+                                        <p className="text-slate-500 dark:text-text-secondary text-[11px] font-medium uppercase tracking-wider">{card.label}</p>
+                                        <div className="size-9 rounded-lg bg-slate-100 dark:bg-neutral-bg3 flex items-center justify-center">
                                             <Icon className={card.iconColor} size={18} strokeWidth={2.5} />
                                         </div>
                                     </div>
-                                    <div className="flex items-end gap-2">
+                                    <div className="relative flex items-end gap-2">
                                         <h3 className="text-2xl font-bold text-slate-900 dark:text-white">{card.value}</h3>
                                         <span className={`${card.subColor} text-xs font-medium mb-1.5`}>{card.sub}</span>
                                     </div>
@@ -98,11 +99,12 @@ export default async function DashboardPage() {
                                     const colorIndex = index % colors.length;
                                     const lastLog = project.dailyLogs[0];
                                     return (
-                                        <Link href={`/projects/${project.id}`} key={project.id} className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden flex flex-col sm:flex-row sm:items-center p-4 gap-5 group hover:border-slate-300 dark:hover:border-slate-700 transition-colors cursor-pointer">
-                                            <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${colors[colorIndex]} flex items-center justify-center shrink-0 shadow-lg shadow-black/10`}>
+                                        <Link href={`/projects/${project.id}`} key={project.id} className="glass-card flex flex-col sm:flex-row sm:items-center p-4 gap-5 group hover:-translate-y-0.5 hover:shadow-glow hover:border-brand/40 transition-all duration-300 cursor-pointer overflow-hidden relative">
+                                            <div className="absolute inset-0 bg-gradient-to-l from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                            <div className={`relative w-16 h-16 rounded-xl bg-gradient-to-br ${colors[colorIndex]} flex items-center justify-center shrink-0 shadow-lg shadow-black/10`}>
                                                 <span className="text-white text-2xl font-black">{project.name.substring(0, 2).toUpperCase()}</span>
                                             </div>
-                                            <div className="flex-1 min-w-0">
+                                            <div className="relative flex-1 min-w-0">
                                                 <div className="flex items-center gap-2.5 mb-1.5">
                                                     <span className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full uppercase tracking-wider ${project.status === 'ACTIVE' ? 'bg-emerald-100/80 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30' : project.status === 'DELAYED' ? 'bg-amber-100/80 text-amber-700 border border-amber-200' : 'bg-blue-100/80 text-blue-700 border border-blue-200'}`}>{project.status}</span>
                                                     <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider flex items-center gap-1">
@@ -110,13 +112,13 @@ export default async function DashboardPage() {
                                                         {project.location || "No locale"}
                                                     </span>
                                                 </div>
-                                                <h4 className="text-base font-medium text-slate-900 dark:text-white truncate group-hover:text-primary transition-colors">{project.name}</h4>
+                                                <h4 className="text-base font-medium text-slate-900 dark:text-white truncate group-hover:text-brand transition-colors">{project.name}</h4>
                                                 <p className="text-xs text-slate-500 truncate font-medium mt-0.5">{project.crews.length} crew{project.crews.length !== 1 ? 's' : ''} deployed on site</p>
                                             </div>
-                                            <div className="sm:text-right shrink-0 bg-slate-50 dark:bg-slate-800 p-3 rounded-lg border border-slate-100 dark:border-slate-700">
+                                            <div className="relative sm:text-right shrink-0 bg-slate-50 dark:bg-neutral-bg3 p-3 rounded-lg border border-slate-100 dark:border-border-default">
                                                 <p className="text-[10px] font-medium text-slate-400 uppercase tracking-wider mb-1">Latest Intelligence</p>
-                                                <p className="text-sm font-bold text-slate-600 dark:text-slate-300 flex items-center gap-1.5 sm:justify-end">
-                                                    <Activity size={14} className={lastLog ? 'text-primary' : 'text-slate-400'} />
+                                                <p className="text-sm font-bold text-slate-600 dark:text-text-primary flex items-center gap-1.5 sm:justify-end">
+                                                    <Activity size={14} className={lastLog ? 'text-brand' : 'text-slate-400'} />
                                                     {lastLog ? new Date(lastLog.dateReported).toLocaleDateString('en', { month: 'short', day: 'numeric' }) : "No logs available"}
                                                 </p>
                                             </div>
@@ -129,32 +131,32 @@ export default async function DashboardPage() {
                 </div>
 
                 {/* Recent Activity Sidebar */}
-                <FadeIn delay={0.25} direction="left" className="w-[320px] shrink-0 hidden xl:block">
-                    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
-                        <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-                            <Activity className="text-primary" size={20} strokeWidth={2.5} />
+                <FadeIn delay={0.25} direction="left" className="w-[320px] shrink-0 hidden xl:block relative z-10">
+                    <div className="glass-panel rounded-xl shadow-lg p-6">
+                        <h3 className="text-base font-semibold text-slate-900 dark:text-text-primary mb-6 flex items-center gap-2">
+                            <Activity className="text-brand" size={20} strokeWidth={2.5} />
                             Live Feed
                         </h3>
                         {recentLogs.length === 0 ? (
-                            <div className="text-center py-10 bg-slate-50 dark:bg-slate-800 rounded-lg border border-dashed border-slate-200 dark:border-slate-700">
+                            <div className="text-center py-10 bg-slate-50 dark:bg-neutral-bg3/50 rounded-lg border border-dashed border-slate-200 dark:border-border-default">
                                 <Activity className="text-slate-300 dark:text-slate-600 mx-auto mb-3" size={32} />
-                                <p className="text-slate-500 font-medium text-sm">Awaiting field intelligence...</p>
-                                <p className="text-slate-400 text-xs mt-1 px-4">Daily logs from Telegram will appear here in real-time.</p>
+                                <p className="text-slate-500 dark:text-text-secondary font-medium text-sm">Awaiting field intelligence...</p>
+                                <p className="text-slate-400 dark:text-text-muted text-xs mt-1 px-4">Daily logs from Telegram will appear here in real-time.</p>
                             </div>
                         ) : (
                             <div className="space-y-4">
                                 {recentLogs.map((log) => (
-                                    <Link href={`/projects/${log.projectId}`} key={log.id} className="flex items-start gap-3.5 p-3 -mx-3 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-800 transition-all duration-200 group cursor-pointer">
-                                        <div className="size-10 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center shrink-0">
-                                            <FileText className="text-primary group-hover:scale-110 transition-transform" size={16} strokeWidth={2.5} />
+                                    <Link href={`/projects/${log.projectId}`} key={log.id} className="flex items-start gap-3.5 p-3 -mx-3 rounded-2xl hover:bg-slate-50 dark:hover:bg-white/5 transition-all duration-200 group cursor-pointer">
+                                        <div className="size-10 rounded-xl bg-slate-100 dark:bg-neutral-bg3 flex items-center justify-center shrink-0 border border-transparent group-hover:border-brand/20 transition-colors">
+                                            <FileText className="text-brand opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-300" size={16} strokeWidth={2.5} />
                                         </div>
                                         <div className="flex-1 min-w-0">
-                                            <p className="text-sm font-medium text-slate-800 dark:text-white truncate group-hover:text-primary transition-colors">{log.worker.name}</p>
-                                            <p className="text-[11px] text-slate-500 truncate font-medium mt-0.5 flex items-center gap-1">
+                                            <p className="text-sm font-medium text-slate-800 dark:text-white truncate group-hover:text-brand transition-colors">{log.worker.name}</p>
+                                            <p className="text-[11px] text-slate-500 dark:text-text-secondary truncate font-medium mt-0.5 flex items-center gap-1">
                                                 <Folder size={10} />
                                                 {log.project.name}
                                             </p>
-                                            <p className="text-[10px] text-slate-400 font-bold mt-1.5 bg-slate-100 dark:bg-white/5 inline-block px-1.5 py-0.5 rounded-md">
+                                            <p className="text-[10px] text-brand/80 dark:text-brand/90 font-bold mt-1.5 bg-brand/10 inline-block px-1.5 py-0.5 rounded-md">
                                                 {new Date(log.dateReported).toLocaleDateString('en', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
                                             </p>
                                         </div>
@@ -162,7 +164,7 @@ export default async function DashboardPage() {
                                 ))}
                             </div>
                         )}
-                        <button className="w-full mt-6 py-2.5 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 font-medium text-xs rounded-xl transition-colors tracking-wider uppercase">View All History</button>
+                        <button className="w-full mt-6 py-2.5 bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 text-slate-600 dark:text-text-primary font-medium text-xs rounded-xl transition-all duration-300 tracking-wider uppercase border border-transparent hover:border-white/10">View All History</button>
                     </div>
                 </FadeIn>
             </div>
