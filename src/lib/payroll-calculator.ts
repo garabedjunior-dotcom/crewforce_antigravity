@@ -47,9 +47,9 @@ function groupBy<T>(items: T[], key: keyof T): Map<string, T[]> {
  * Optimized: uses batch queries instead of per-worker N+1 queries.
  */
 export async function calculateWeeklyPayroll(startDate: Date, endDate: Date): Promise<PayrollResult[]> {
-    // Batch query 1: All active workers
+    // Batch query 1: All active workers (field workers, supervisors, managers)
     const workers = await prisma.user.findMany({
-        where: { role: 'WORKER', isActive: true },
+        where: { isActive: true },
         include: { crew: true, projectRates: true }
     });
 
