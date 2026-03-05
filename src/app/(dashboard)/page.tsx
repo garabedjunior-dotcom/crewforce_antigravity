@@ -130,7 +130,7 @@ export default async function DashboardPage() {
 
                 {/* Recent Activity Sidebar */}
                 <FadeIn delay={0.25} direction="left" className="w-[320px] shrink-0 hidden xl:block">
-                    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6 sticky top-28">
+                    <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
                         <h3 className="text-base font-semibold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
                             <Activity className="text-primary" size={20} strokeWidth={2.5} />
                             Live Feed
